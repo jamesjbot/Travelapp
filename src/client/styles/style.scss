@@ -20,9 +20,29 @@ body{
     padding: 1rem;
 }
 
+.date {
+  display: flex;
+  flex-direction: column;
+}
+
 .feel {
   display: flex;
   flex-direction: column;
+}
+
+.nativeDatePicker {
+  display: block;
+  //flex-direction: column;
+}
+
+
+.fallbackDatePicker {
+  display: block;
+  //flex-direction: column;
+}
+
+.fallbackLabel {
+  display: block;
 }
 
 .holder {
