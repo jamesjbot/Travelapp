@@ -12,8 +12,10 @@ module.exports = {
     mode: 'production',
     mode: 'development',
     output: {
+       path: path.resolve(process.cwd(), 'dist'),
        libraryTarget: 'var',
-       library: 'Client'
+       library: 'Client',
+
     },
     module: {
         rules: [

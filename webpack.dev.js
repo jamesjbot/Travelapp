@@ -13,6 +13,7 @@ module.exports = {
       port:9000
     },
     output: {
+      path: path.resolve(process.cwd(), 'dist'),
       libraryTarget: 'var',
       library: 'Client'
     },
@@ -37,7 +38,7 @@ module.exports = {
         }),
         new CleanWebpackPlugin({
             // Simulate the removal of files
-            dry: true,
+            dry: false,
             // Write Logs to Console
             verbose: true,
             // Automatically remove all unused webpack assets on rebuild
