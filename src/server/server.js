@@ -16,6 +16,8 @@ if (result.error) {
 
 // Require Express to run server and routes
 const express = require('express');
+
+// Allow access to see current directory.
 const path = require('path');
 
 // Start up an instance of app
@@ -41,10 +43,25 @@ app.use(express.static('dist'));
 const port = 8889;
 const server = app.listen(port,() => {console.log(`running on port ${port}`);});
 
-app.get('/test', function (req, res) {
-    console.log(__dirname);
-    pixabay.test();
-    pixabay.fetchPixabayImage('buffalo,NY');
+app.post('/pixabay', function (req, res) {
+    let input = req.body.data;
+    let regExp = /[^a-z]+/gi; // Non characters like blanks commas
+    let searchText = input.replace(regExp, '+');
+
+    // TODO debuggin code remove
+    searchText = 'buffalo+new+york';
+
+    pixabay.fetchPixabayImage(searchText)
+      .then(data => data.json())
+      .then(json => {
+        if (json.total != 0) {
+            console.log(json.hits[0].previewURL);
+            res.send({'data':json.hits[0].previewURL});
+          } else {
+            console.log('The response had zero hits');
+            res.send({data:'No hits'});
+          }
+      });
 });
 
 // Return home webpage
