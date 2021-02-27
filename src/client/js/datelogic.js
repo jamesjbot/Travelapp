@@ -1,5 +1,5 @@
 
-/*jshint esversion: 8*/
+/*jshint esversion:8*/
 
 function populateDays(month, daySelect, yearSelect, previousDay) {
   // delete the current set of <option> elements out of the

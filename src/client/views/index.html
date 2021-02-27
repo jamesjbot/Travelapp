@@ -2,6 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-with, initial-scale=1">
 <title>Weather Journal</title>
 <link href="https://fonts.googleapis.com/css?family=Oswald:400,600,700|Ranga:400,700&display=swap" rel="stylesheet">
 <!--Remove because this is now bundled automatically link rel="stylesheet" href="main.css"-->
@@ -10,7 +11,26 @@
  <div id = "app">
 
   <div id="pagetitle" class ="holder headline">
-    Weather Journal App 1.2
+    Travel Planner App 1.2
+  </div>
+
+  <div id='listcontainer'>
+    <!--https://www.niagarafallslive.com/wp-content/uploads/2017/08/opt-falls-background-1264x790-176k.jpg-->
+    <div class="travelCard">
+      <img src="https://www.niagarafallslive.com/wp-content/uploads/2017/08/opt-falls-background-1264x790-176k.jpg">
+      <div class="informationStack">
+        <div>My Trip to: Paris, France</div>
+        <div>Departing: </div>
+        <div> Save trip remove trip </div>
+        <div> Paris France is 220 days away </div>
+        <div> Typical weather for then is: </div>
+        <div> High -46 Low -35 </div>
+        <div> Mostly cloudy throught the day </div>
+      </div>
+    </div>
+    <div id="addTravelLegButton">
+      <button  type="button" >Add Another Trip Leg</button>
+    </div>
   </div>
 
   <div class ="holder zip">

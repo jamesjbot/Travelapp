@@ -1,10 +1,16 @@
 
 /* jshint esversion:6 */
 
+// TODO: Remove addTravelCard
+import { addTravelCard, addUserInputCard } from './js/buttonpress';
 import { generate } from './js/app';
 import { populateDays, populateYears} from './js/datelogic';
 
 import './styles/style.scss';
+
+// Attach EventListener to button
+const legbutton = document.getElementById('addTravelLegButton');
+legbutton.addEventListener("click", addUserInputCard);
 
 const button = document.getElementById('generate');
 button.addEventListener("click", generate);
