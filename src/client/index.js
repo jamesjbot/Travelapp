@@ -2,7 +2,7 @@
 /* jshint esversion:6 */
 
 // TODO: Remove addTravelCard
-import { addTravelCard, addUserInputCard } from './js/buttonpress';
+import { addTravelCard, addUserInputCard, replaceWithInfoCard} from './js/buttonpress';
 import { generate } from './js/app';
 import { populateDays, populateYears} from './js/datelogic';
 
@@ -25,8 +25,9 @@ var monthSelect = document.querySelector('#month');
 var daySelect = document.querySelector('#day');
 
 // hide fallback initially
-fallbackPicker.style.display = 'none';
-fallbackLabel.style.display = 'none';
+// TODO Maybe return
+//fallbackPicker.style.display = 'none';
+//fallbackLabel.style.display = 'none';
 
 //preserve day selection
 var previousDay;
@@ -43,9 +44,10 @@ try {
 // if it does, run the code inside the if() {} block
 if(test.type === 'text') {
   // hide the native picker and show the fallback
-  nativePicker.style.display = 'none';
-  fallbackPicker.style.display = 'block';
-  fallbackLabel.style.display = 'block';
+  //TODO Return back later
+  //nativePicker.style.display = 'none';
+  //fallbackPicker.style.display = 'block';
+  //fallbackLabel.style.display = 'block';
 
   // populate the days and years dynamically
   // (the months are always the same, therefore hardcoded)
@@ -55,18 +57,19 @@ if(test.type === 'text') {
 
 // when the month or year <select> values are changed, rerun populateDays()
 // in case the change affected the number of available days
-yearSelect.onchange = function() {
-  populateDays(monthSelect.value, daySelect, yearSelect, previousDay);
-};
+//TODO return
+// yearSelect.onchange = function() {
+//   populateDays(monthSelect.value, daySelect, earSelect, previousDay);
+// };
+//
+// monthSelect.onchange = function() {
+//   populateDays(monthSelect.value, daySelect, yearSelect, previousDay);
+// };
+//
+// // update what day has been set to previously
+// // see end of populateDays() for usage
+// daySelect.onchange = function() {
+//   previousDay = daySelect.value;
+// };
 
-monthSelect.onchange = function() {
-  populateDays(monthSelect.value, daySelect, yearSelect, previousDay);
-};
-
-// update what day has been set to previously
-// see end of populateDays() for usage
-daySelect.onchange = function() {
-  previousDay = daySelect.value;
-};
-
-export { generate };
+export { generate, replaceWithInfoCard };

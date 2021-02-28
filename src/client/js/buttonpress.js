@@ -2,21 +2,64 @@
 
 function addTravelCard() {
   console.log('Add travel card presed ');
-  createNewTravelCard();
-
+  createNewTravelInfoCard();
 }
 
 function addUserInputCard() {
-  consle.log('Add User Input card pressed');
+  console.log('Add User Input card pressed');
+  createUserInputCard();
+}
+
+function replaceWithInfoCard() {
+  // TODO Replace card with travel log.
+  console.log('You want to replace with Information Card');
+  deleteLastUserInputCard();
+  createNewTravelInfoCard();
+}
+
+function deleteLastUserInputCard() {
+  let inputCard = document.getElementById('lastUserInputCard');
+  document.getElementById('listcontainer').removeChild(inputCard);
+}
+
+function createUserInputCard() {
+  var userInputCard = document.createElement('div');
+  userInputCard.setAttribute('id','lastUserInputCard');
+  // TODO: Add a class
+  //userInputCard.classList.add();
+  let placename = document.createElement('div');
+  placename.innerHTML =
+    `<label for="zip">Enter Placename here</label>
+    <input type="text" id="placename" placeholder="Enter Placename here">`;
+  let travelDate = document.createElement('div');
+  travelDate.innerHTML =
+    `<label for="bday">Enter your date of Travel:</label>
+    <input type="date" id="travelday" name="travelday">`;
+
+    //add a submit button
+    let submitButton = document.createElement('button');
+    submitButton.setAttribute('type','button');
+    submitButton.innerHTML = 'Get Travel Info';
+    submitButton.setAttribute('onclick','Client.replaceWithInfoCard()');
+
+    // Create the card
+    userInputCard.appendChild(placename);
+    userInputCard.appendChild(travelDate);
+    userInputCard.appendChild(submitButton);
+
+    // Display the card
+    let cardContainer = document.getElementById('listcontainer');
+    let addLegButton = document.getElementById('addTravelLegButton');
+    cardContainer.insertBefore(userInputCard, addLegButton);
+    addLegButton.style.visibility = 'hidden';
 }
 
 
-
-function createNewTravelCard() {
+function createNewTravelInfoCard() {
   var travelCard = document.createElement('div');
   travelCard.classList.add("travelCard");
   var img = document.createElement('img');
-  img.setAttribute('src',"https://www.niagarafallslive.com/wp-content/uploads/2017/08/opt-falls-background-1264x790-176k.jpg")
+  img.setAttribute('src',"https://www.niagarafallslive.com/wp-content/uploads/2017/08/opt-falls-background-1264x790-176k.jpg");
   var stack = document.createElement('div');
   stack.classList.add("informationStack");
   stack.innerHTML =
@@ -33,9 +76,10 @@ function createNewTravelCard() {
     travelCard.appendChild(stack);
 
     let cardContainer = document.getElementById('listcontainer');
-    let travelCardButton = document.getElementById('addTravelCardButton');
-    cardContainer.insertBefore(travelCard, travelCardButton);
+    let addLegButton = document.getElementById('addTravelLegButton');
+    cardContainer.insertBefore(travelCard, addLegButton);
+    addLegButton.style.visibility = 'visible';
 }
 
 
-export { addTravelCard, addUserInputCard} ;
+export { addTravelCard, addUserInputCard, replaceWithInfoCard };
