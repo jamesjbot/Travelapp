@@ -40,22 +40,27 @@ app.use(express.static('dist'));
 
 
 // Setup Server
-const port = 8889;
+const port = 9000;
 const server = app.listen(port,() => {console.log(`running on port ${port}`);});
 
+// Routes
+
+// Getting Pixabay Images without exposing our API_KEY
 app.post('/pixabay', function (req, res) {
+    console.log('server.js /pixabay route called');
     let input = req.body.data;
     let regExp = /[^a-z]+/gi; // Non characters like blanks commas
     let searchText = input.replace(regExp, '+');
 
     // TODO debuggin code remove
-    searchText = 'buffalo+new+york';
+    //searchText = 'buffalo+new+york';
 
     pixabay.fetchPixabayImage(searchText)
       .then(data => data.json())
       .then(json => {
+        // Pick the first Preview Image URL or Return with nothings
         if (json.total != 0) {
-            console.log(json.hits[0].previewURL);
+            console.log(`pixabay respondeded with ${json.hits[0].previewURL}`);
             res.send({'data':json.hits[0].previewURL});
           } else {
             console.log('The response had zero hits');
@@ -66,6 +71,7 @@ app.post('/pixabay', function (req, res) {
 
 // Return home webpage
 app.get('/cute', function (req, res) {
+    console.log('server.js /cute route called');
     console.log("Sending index.html");
     console.log(`APIKEY:${process.env.WEATHERBIT_API_KEY}`);
     getImages('Of Chinchillas');
@@ -78,6 +84,7 @@ app.get('/cute', function (req, res) {
 app.get('/lastStoredData',getProjectData);
 
 function getProjectData(req, res) {
+  console.log('server.js /lastStoredData route called');
   console.log('a request for last recorded Date, Temperature, Feeling');
   res.send(projectData);
 }

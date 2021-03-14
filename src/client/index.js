@@ -3,7 +3,7 @@
 
 // TODO: Remove addTravelCard
 import { addTravelCard, addUserInputCard, replaceWithInfoCard} from './js/buttonpress';
-import { generate } from './js/app';
+//import { generate } from './js/app';
 import { populateDays, populateYears} from './js/datelogic';
 
 import './styles/style.scss';
@@ -12,8 +12,8 @@ import './styles/style.scss';
 const legbutton = document.getElementById('addTravelLegButton');
 legbutton.addEventListener("click", addUserInputCard);
 
-const button = document.getElementById('generate');
-button.addEventListener("click", generate);
+//const button = document.getElementById('generate');
+//button.addEventListener("click", generate);
 
 // define variables
 var nativePicker = document.querySelector('.nativeDatePicker');
@@ -72,4 +72,8 @@ if(test.type === 'text') {
 //   previousDay = daySelect.value;
 // };
 
-export { generate, replaceWithInfoCard };
+// Create the initial user input card
+addUserInputCard();
+
+// Exported functions that can be used on the webpage with Client. syntax
+export { replaceWithInfoCard };
