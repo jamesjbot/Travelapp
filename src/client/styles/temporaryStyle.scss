@@ -1,3 +1,4 @@
+
 body{
     background: #fffff8;
     font-family: -apple-system, BlinkMacSystemFont, sans-serif;
@@ -79,7 +80,8 @@ img {
 }
 
 .holder {
-
+  //display: flex;
+  //flex-direction: column;
 }
 
 .entry {
@@ -90,8 +92,14 @@ img {
   visibility: hidden;
 }
 
+//TODO Remove
+#cute_chinchilla {
+  color: grey;
+}
+
 #addTravelLegButton {
-  visibility: hidden;
+  font-size: 25px;
+  font-family: 'Source Sans Pro', sans-serif;
 }
 
 #entryHolder{
@@ -145,6 +153,7 @@ button{
     border: none;
     box-shadow: 2px 4px 5px #444;
 }
+
 h1{
     font-size: 36px;
 }
@@ -155,6 +164,7 @@ textarea{
     font-size: 20px;
     font-family: 'Oswald', sans-serif;
 }
+
 /* Reset style for HTML element on active to have no border*/
 input:focus,
 select:focus,
@@ -166,17 +176,14 @@ button:focus {
 ::placeholder { /* Firefox, Chrome, Opera */
     color: #f0d43a;
     font-family: 'Oswald', sans-serif;
-
 }
 
 :-ms-input-placeholder { /* Internet Explorer 10-11 */
     color: #f0d43a;
     font-family: 'Oswald', sans-serif;
-
 }
 
 ::-ms-input-placeholder { /* Microsoft Edge */
     color: #f0d43a;
     font-family: 'Oswald', sans-serif;
-
 }

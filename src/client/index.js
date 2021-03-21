@@ -2,16 +2,18 @@
 /* jshint esversion:6 */
 
 // TODO: Remove addTravelCard
-import { addTravelCard, addUserInputCard, replaceWithInfoCard} from './js/buttonpress';
+import { addUserInputCard, replaceWithInfoCard} from './js/buttonpress';
 //import { generate } from './js/app';
 import { populateDays, populateYears} from './js/datelogic';
 
-import './styles/style.scss';
+import './styles/temporaryStyle.scss';
 
 // Attach EventListener to button
 const legbutton = document.getElementById('addTravelLegButton');
 legbutton.addEventListener("click", addUserInputCard);
 
+//TODO Remove from production forced leg to none
+legbutton.style.display = 'none';
 //const button = document.getElementById('generate');
 //button.addEventListener("click", generate);
 
