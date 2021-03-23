@@ -1,7 +1,8 @@
 
 body{
     background: #fffff8;
-    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: 'Source Sans Pro', sans-serif;
+    //font-family: -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 img {
@@ -22,7 +23,7 @@ img {
     align-content: center;
     grid-gap: 1em;
     font-size: 20px;
-    font-family: 'Oswald', sans-serif;
+    //font-family: 'Oswald', sans-serif;
     padding: 1rem;
     overflow: hidden;
 }
@@ -92,14 +93,48 @@ img {
   visibility: hidden;
 }
 
-//TODO Remove
-#cute_chinchilla {
-  color: grey;
+.inline_button {
+  width: auto;
+  height: auto;
+  border-radius: 50px;
+  background: white;
+  border: 2px solid black;
+  transition: background-color 0.5s;
+  font-weight: bolder;
+  font-size: large;
+  padding: 5px;
+  margin: 3px;
 }
 
-#addTravelLegButton {
+.inline_button:hover {
+  background-color: green;
+}
+
+.addTravelLegButton {
   font-size: 25px;
   font-family: 'Source Sans Pro', sans-serif;
+  width: 400px;
+  height: 100px;
+  background: #3b4a6b;
+  color: #f0d43a;
+  //font-size: 26px;
+  //font-family: 'Oswald', sans-serif;
+  border-radius: 50px;
+  border: none;
+  box-shadow: 2px 4px 5px #444;
+}
+
+#travelInfoButton {
+  font-size: 25px;
+  font-family: 'Source Sans Pro', sans-serif;
+  width: 400px;
+  height: 100px;
+  background: #3b4a6b;
+  color: #f0d43a;
+  //font-size: 26px;
+  //font-family: 'Oswald', sans-serif;
+  border: none;
+  box-shadow: 2px 4px 5px #444;
 }
 
 #entryHolder{
@@ -141,17 +176,6 @@ input{
     font-size: 20px;
     font-family: 'Oswald', sans-serif;
     border: none;
-}
-
-button{
-    width: 400px;
-    height: 100px;
-    background: #3b4a6b;
-    color: #f0d43a;
-    font-size: 26px;
-    font-family: 'Oswald', sans-serif;
-    border: none;
-    box-shadow: 2px 4px 5px #444;
 }
 
 h1{

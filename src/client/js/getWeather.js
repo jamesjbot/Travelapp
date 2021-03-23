@@ -3,7 +3,7 @@
 
 async function getWeather(inputText) {
     const jsonText = {data: inputText};
-    return fetch('http://localhost:8889/weather', {
+    return fetch('http://localhost:9000/weather', {
       method: 'POST',
       credentials: 'same-origin',
       headers: {'Content-Type': 'application/json'},

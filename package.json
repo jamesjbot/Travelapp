@@ -8,7 +8,7 @@
     "start": "node src/server/server.js",
     "test": "jest",
     "prod": "webpack --config webpack.prod.js",
-    "dev": "webpack --config webpack.dev.js",
+    "dev": "webpack --config webpack.dev.js && node src/server/server.js",
     "dev-server": "webpack-dev-server --config webpack.dev.js --open"
   },
   "author": "",

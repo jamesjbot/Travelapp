@@ -3,6 +3,7 @@
 
 // TODO: Remove addTravelCard
 import { addUserInputCard, replaceWithInfoCard} from './js/buttonpress';
+//import displayParentName from './js/informationcardlogic';
 //import { generate } from './js/app';
 import { populateDays, populateYears} from './js/datelogic';
 
@@ -77,5 +78,15 @@ if(test.type === 'text') {
 // Create the initial user input card
 addUserInputCard();
 
+//TODO: Remove
+function setDisplayToNone() {
+  document.getElementById("addTravelLegButton").style.display = 'none';
+}
+
+function removeInformationCard(element) {
+  console.log('I got element', element.parentElement.parentElement.parentElement.parentElement.classList);
+  element.parentElement.parentElement.parentElement.parentElement.remove();
+}
+
 // Exported functions that can be used on the webpage with Client. syntax
-export { replaceWithInfoCard };
+export { replaceWithInfoCard, setDisplayToNone, removeInformationCard };

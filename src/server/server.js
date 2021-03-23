@@ -54,19 +54,27 @@ app.post('/pixabay', function (req, res) {
 
     // TODO debuggin code remove
     //searchText = 'buffalo+new+york';
+    console.log('Overriding pixabay information');
+    //setTimeoout(debugdelay,2000,res);
+    res.send({data:'https://www.niagarafallslive.com/wp-content/uploads/2017/08/opt-falls-background-1264x790-176k.jpg'});
+    // pixabay.fetchPixabayImage(searchText)
+    //   .then(data => data.json())
+    //   .then(json => {
+    //     // Pick the first Preview Image URL or Return with nothings
+    //     if (json.total != 0) {
+    //         console.log(`pixabay respondeded with ${json.hits[0].previewURL}`);
+    //         res.send({'data':json.hits[0].previewURL});
+    //       } else {
+    //         console.log('The response had zero hits');
+    //         res.send({data:'No hits'});
+    //       }
+    //   });
+});
 
-    pixabay.fetchPixabayImage(searchText)
-      .then(data => data.json())
-      .then(json => {
-        // Pick the first Preview Image URL or Return with nothings
-        if (json.total != 0) {
-            console.log(`pixabay respondeded with ${json.hits[0].previewURL}`);
-            res.send({'data':json.hits[0].previewURL});
-          } else {
-            console.log('The response had zero hits');
-            res.send({data:'No hits'});
-          }
-      });
+// Get weather from weatherbit
+app.post('/weather', function (req, res) {
+    console.log('User request weather data');
+    res.send({high:99, low:66});
 });
 
 // Return home webpage
@@ -88,7 +96,6 @@ function getProjectData(req, res) {
   console.log('a request for last recorded Date, Temperature, Feeling');
   res.send(projectData);
 }
-
 
 // Create Post Route to Store Date Temperature and Feeling
 app.post('/addData', receiveProjectData);

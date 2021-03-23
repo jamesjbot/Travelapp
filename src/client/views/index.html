@@ -2,43 +2,23 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-with, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Weather Journal</title>
 <link href="https://fonts.googleapis.com/css?family=Oswald:400,600,700|Ranga:400,700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap" rel="stylesheet">
 <!--Remove because this is now bundled automatically link rel="stylesheet" href="main.css"-->
 </head>
  <body>
- <div id = "app">
-
-  <div id="pagetitle" class ="holder headline">
-    Travel Planner App 1.2
+ <div id="app">
+  <div id="pagetitle" class="holder headline">
+    Travel Planner App 1.31
   </div>
-
-  <div id='listcontainer'>
-    <!--https://www.niagarafallslive.com/wp-content/uploads/2017/08/opt-falls-background-1264x790-176k.jpg-->
-    <!--<div class="travelCard">
-      <img src="https://www.niagarafallslive.com/wp-content/uploads/2017/08/opt-falls-background-1264x790-176k.jpg">
-      <div class="informationStack">
-        <div>My Trip to: Paris, France</div>
-        <div>Departing: </div>
-        <div> Save trip remove trip </div>
-        <div> Paris France is 220 days away </div>
-        <div> Typical weather for then is: </div>
-        <div> High -46 Low -35 </div>
-        <div> Mostly cloudy throught the day </div>
-      </div>
-    </div>-->
+  <div class='holder' id='listcontainer'>
     <div id="addTravelLegButton">
-      <button  type="button" >Add Another Trip Leg</button>
+      <button type="button" class='addTravelLegButton' >Add Another Trip Leg</button>
     </div>
   </div>
-
-  <div class ="holder feel">
-    <label for="feelings">How are you feeling today?</label>
-    <textarea class= "myInput" id="feelings" placeholder="Enter your feelings here" rows="9" cols="50"></textarea>
-    <button id="generate" type = "submit"> Generate </button>
-  </div>
-
 </div>
 </body>
 </html>
