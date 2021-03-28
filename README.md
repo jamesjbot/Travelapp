@@ -1,16 +1,21 @@
-# Weather-Journal App Project
+# Travel Weather App
 
 ## Overview
-This project creates an asynchronous web app that uses a Web API and user data to dynamically update the UI.
+This project allows you to plan a multiple trips and give you the weather for your destination within 16 days
 
 ## How to use
-Start the server by using Terminal to navigate to the folder that contains server.js.
+Start the server by using Terminal in the base directory.
 
 Start the server with 'npm run start'.
 
-Direct your web browser to http://localhost:8888/, to access the application.
+Direct your web browser to http://localhost:9000/, to access the application.
 
-Enter your current zip code and your feelings about the weather.
+Enter the place name of the destination you would like to visit and enter the date you will arrive there.
 
-In the terminal, you can see console messages from the server about the state of stored data.
+You can click remove trip to remove the destination.
 
+Click Add Another Trip Leg to select another destination.
+
+### Develop other features
+
+If you're going to make changes you can use the dev shortcut 'npm run dev'.
