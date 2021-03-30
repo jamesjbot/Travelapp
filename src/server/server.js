@@ -1,5 +1,6 @@
 /*jshint esversion: 8*/
-
+const location = require('./location');
+const weatherbit = require('./weatherbit');
 const pixabay = require('./pixabay');
 
 // Setup empty JS object to act as endpoint for all routes
@@ -45,6 +46,18 @@ const server = app.listen(port,() => {console.log(`running on port ${port}`);});
 
 // Routes
 
+app.post('/location', function(req, res) {
+    console.log('server.js /location route called');
+    console.log('server.js /location received',req.body.data);
+    let placename = req.body.data;
+    let key = process.env.GEONAMES_API_KEY;
+    location.retrieveLatLonLocationOf(placename,key).then(jsonLatLong => {
+      console.log('Server route /location sending back response.');
+      console.log(jsonLatLong);
+      res.send(jsonLatLong);
+    });
+});
+
 // Getting Pixabay Images without exposing our API_KEY
 app.post('/pixabay', function (req, res) {
     console.log('server.js /pixabay route called');
@@ -73,8 +86,22 @@ app.post('/pixabay', function (req, res) {
 
 // Get weather from weatherbit
 app.post('/weather', function (req, res) {
-    console.log('User request weather data');
-    res.send({high:99, low:66});
+    console.log('User request weather data',req.body);
+    let key = process.env.WEATHERBIT_API_KEY;
+    weatherbit.retrieveWeatherDataFromWeatherBit(req.body.latLong.lat,
+                                                 req.body.latLong.long,
+                                                 //'CURRENT',
+                                                 req.body.weatherType,
+                                                 req.body.month_day,
+                                                 key)
+    .then( data => {
+      console.log('Data received from weatherbit',data);
+      res.send(data);
+    })
+    .catch( function(error) {
+      console.log('Error calling weather',error);
+      res.send({high:99, low:66, description: 'Error Calling Weatherbit'});
+    });
 });
 
 // Return home webpage

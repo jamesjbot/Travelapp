@@ -1,8 +1,13 @@
 
 /*jshint esversion:8*/
 
-async function getWeather(inputText) {
-    const jsonText = {data: inputText};
+//TODO Remove Async
+//async function getWeather(latLongJSON,travelDate) {
+function getWeatherPromise(lat_long_JSON, weather_Type, date) {
+    console.log('-->getWeather received', lat_long_JSON, weather_Type);
+    const jsonText = {latLong: lat_long_JSON,
+                      weatherType: weather_Type,
+                      month_day:date};
     return fetch('http://localhost:9000/weather', {
       method: 'POST',
       credentials: 'same-origin',
@@ -12,8 +17,8 @@ async function getWeather(inputText) {
     .then(res => res.json()) // Receive JSON String, convert to JSON
     .then(json => {return json;})
     .catch(function(error) {
-      console.log('Sorry error with getting sentiment',error);
+      console.log('Sorry error with getting weather',error);
     });
 }
 
-export { getWeather };
+export default getWeatherPromise ;

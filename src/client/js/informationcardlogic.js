@@ -1,24 +1,136 @@
 
 /*jshint esversion:8*/
+const CURRENT = 'CURRENT';
+const FORECAST = 'FORECAST';
+const CLIMATE = 'CLIMATE';
 
-async function createNewTravelInfoCard(userJSONData) {
+import getWeatherPromise from './getWeather';
 
+// Get the lat long of placename from Geonmaes API
+ function getLatLongLocationPromise(input){
+    console.log('buttonpress getLatLongLocation recevied:',input);
+    const jsonText = {data: input};
+
+    return fetch('http://localhost:9000/location', {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(jsonText)
+    });
+}
+
+async function fillinWeatherAsynchronously(weather_Type,
+                                           from_placename,
+                                           uiupdate_temperature,
+                                           uiupdate_weather_description,
+                                           month_day) {
+  console.log('blah, blah, getLocationThenWeatherCalled');
+  // this needs to be a promise wrapped in a promise
+  getLatLongLocationPromise(from_placename)
+    .then( res => res.json() )
+    .then( json_Location => {
+      console.log('Received from server',json_Location);
+      return getWeatherPromise(json_Location,
+                               weather_Type,
+                               month_day);
+    })
+    .then( data => {
+      // Update the UI Weather elements
+      console.log('-->fillinWeather received',data);
+      updateUIElementsBasedOn(weather_Type,
+                              data,
+                              uiupdate_temperature,
+                              uiupdate_weather_description
+                              );
+      return;
+      //uiupdate_temperature.innerHTML = `High: ${data.high} Low:${data.low}`;
+      //uiupdate_weather_description.innerHTML = data.description;
+    })
+    .catch(function(error) {
+      console.log('Sorry error with getting location or weather',error);
+    });
+}
+
+function updateUIElementsBasedOn(typeOfWeathercast,
+                                 data,
+                                 uiupdate_temperature,
+                                 uiupdate_weather_description) {
+
+  //uiupdate_temperature.innerHTML = `High: ${data.high} Low:${data.low}`;
+  //console.log('target ui temp',uiupdate_temperature);
+  //console.log('target ui desc',uiupdate_weather_description);
+  console.log('typeOfWeathercast',typeOfWeathercast);
+  //uiupdate_temperature.innerHTML = 'haha overriden';
+  if (typeOfWeathercast == CURRENT){
+    console.log('--> Update with current');
+    uiupdate_temperature.innerHTML = `Temperature: ${data.temp}`;
+    // TODO This is duplicated change to a function
+    uiupdate_weather_description.innerHTML = data.description;
+
+    //return 'The current weather';
+  } else if (typeOfWeathercast == FORECAST) {
+    uiupdate_temperature.innerHTML = `High: ${data.hitemp} Low: ${data.lowtemp}`;
+    // TODO this is duplicated create a function
+    uiupdate_weather_description.innerHTML = data.description;
+
+    //uiupdate_weather_description.innerHTML = `${data.description}`;
+    //uiupdate_temperature.innerHTML = `High: ${data.high} Low:${data.low}`;
+
+    //return 'The forecast for then';
+  } else if (typeOfWeathercast == CLIMATE){
+    uiupdate_weather_description =
+    'The day is too far in the future to forecast weather';
+    //uiupdate_temperature.innerHTML = `Average Temperatue: ${data.avgtemp}`;
+    //uiupdate_weather_description.innerHTML =
+    //`Max temperature: ${data.maxtemp} Min temperature: ${data.mintemp}`;
+    //return 'Typical weather for then';
+  }
+}
+
+
+// TODO: Remove old prototyep methods
+//async function createNewTravelInfoCard(userJSONData) {
+async function createNewTravelInfoCard() {
+
+  let dateJSON = dateProcessing();
+
+  let place_Name = document.getElementById('placename').value;
+  let depart_Date = new Date((document.getElementById('travelDay').value).replace(/-/g,'\/'));
+
+  let temperature_div = document.createElement('div');
+  let weather_description_div = document.createElement('div');
+  temperature_div.innerHTML = 'Getting Temperature';
+  weather_description_div.innerHTML = 'Getting Weather';
+
+  console.log('informationLogig #94 weathertype',dateJSON.typeOfWeathercast);
+  if (dateJSON.typeOfWeathercast == CURRENT || dateJSON.typeOfWeathercast == FORECAST) {
+    fillinWeatherAsynchronously(dateJSON.typeOfWeathercast,
+                                place_Name,
+                                temperature_div,
+                                weather_description_div,
+                                dateJSON.month_day);
+  } else {
+    temperature_div.innerHTML = '';
+    weather_description_div.innerHTML = 'Travel date is too far to forecast weather';
+  }
+
+
+  // Show the Add Travel Leg Button
   let addLegButton = document.getElementById('addTravelLegButton');
   console.log('Changing addtravellegButton to block');
   addLegButton.style.display = 'block';
 
-  const placename = document.getElementById('placename');
-  let dateJSON = dateProcessing();
-  let departDate = new Date((document.getElementById('travelDay').value).replace(/-/g,'\/'));
-  let placeName = document.getElementById('placename').value;
+  //const placename = document.getElementById('placename');
+
 
   // Create travelCard
   var travelCard = document.createElement('div');
   travelCard.classList.add("travelCard");
   // Destination Image Cretaion
   console.log('Calling fetchPixabay');
-  var updateImageTarget = document.createElement('img');
-  fetchPixabayImageFromServer(placename.value,updateImageTarget);
+  var update_Image_Target = document.createElement('img');
+  fetchPixabayImageFromServer(place_Name, update_Image_Target);
+
   //TODO Return original code
   //debugdelayedSetImage(placename, img);
 
@@ -29,27 +141,27 @@ async function createNewTravelInfoCard(userJSONData) {
   var stack = document.createElement('div');
   stack.classList.add("informationStack");
   stack.innerHTML =
-  `<div class='informationStack'>
-      <div>My Trip to: ${placeName}</div>
-      <div>Departing: ${departDate.toDateString()}</div>
+    `<div class='informationStack'>
+      <div>My Trip to: ${place_Name}</div>
+      <div>Departing: ${depart_Date.toDateString()}</div>
       <div>
-        <button class='inline_button' >+ TODO: Save trip</button>
-        <button class='inline_button' onclick='Client.removeInformationCard(this)''>-- Remove Trip</button>
+        <button class='inline_button' onclick='Client.removeInformationCard(this)''>&minus; Remove Trip</button>
       </div>
-      <div>${placeName} is ${dateJSON.daysAway} ${dateJSON.daysLabel} away </div>
-      <div>${weatherForecastLabel(dateJSON.typeOfWeathercast)} is: </div>
-      <div>High -46 Low -35 </div>
-      <div>Mostly cloudy throught the day </div>
+      <div>${place_Name} is ${dateJSON.daysAway} ${dateJSON.daysLabel} away </div>
+      ${weatherForecastLabel(dateJSON.typeOfWeathercast)}
+      <!--div id="temperature_div">High 9999 Low -6666 </div-->
+      <!--div id="weather_descrition">Mostly cloudy throught the day </div-->
     </div>`;
 
-  travelCard.appendChild(updateImageTarget);
+  stack.appendChild(temperature_div);
+  stack.appendChild(weather_description_div);
+
+  travelCard.appendChild(update_Image_Target);
   travelCard.appendChild(stack);
 
   let cardContainer = document.getElementById('listcontainer');
 
   cardContainer.insertBefore(travelCard, addLegButton);
-
-  console.log("I should have just set the addLegButton to block");
 }
 
 function displayParentName(element) {
@@ -68,7 +180,8 @@ function dateProcessing() {
   console.log(`travelday is ${travelDate}`);
   let dateDiff = dateDifference(todaysDate,travelDate);
 
-  var typeOfWeathercast = 'current';
+  // Default value for type of weathercase
+  var typeOfWeathercast = CURRENT;
 
   if (travelDate.getFullYear() == todaysDate.getFullYear()
     && travelDate.getMonth() == todaysDate.getMonth()
@@ -76,24 +189,27 @@ function dateProcessing() {
     {
    // If today retrieve current weatherURL
     console.log('Your traveling today use current weather');
-    typeOfWeathercast = 'current';
+    typeOfWeathercast = CURRENT;
     //fetchCurrent({lat:1, long:2});
 
   } else if (travelDate < sixteenDaysFromToday) {
     // If tomorrow till 16 days later use forecast
     console.log('Your traveling in the forecastable region');
     //fetchWeatherForecast({lat:1, long:2});
-    typeOfWeathercast = 'forecast';
+    typeOfWeathercast = FORECAST;
   } else {
   // If past 16 days use historical numbers
     console.log('We must use historical data');
     //fetchClimateNormals({lat:1, long:2});
-    typeOfWeathercast = 'climate';
+    typeOfWeathercast = CLIMATE;
   }
 
   let daysLabel = (dateDiff == 1) ? 'day' : 'days';
 
-  return {daysAway:dateDiff, typeOfWeathercast:typeOfWeathercast, daysLabel:daysLabel};
+  let month_day = {month:travelDate.getMonth(), day:travelDate.getDate()};
+
+  return {daysAway:dateDiff, typeOfWeathercast:typeOfWeathercast,
+          daysLabel:daysLabel, month_day:month_day};
 }
 
 
@@ -112,12 +228,14 @@ function getFutureDateFrom(date, daysAhead) {
 
 // Return the content for the weather Forecast Label
 function weatherForecastLabel(typeOfWeathercast) {
-  if (typeOfWeathercast == 'current'){
-    return 'The current weather';
-  } else if (typeOfWeathercast == 'forecast' ) {
-    return 'The forecast for then';
+  if (typeOfWeathercast == CURRENT ){
+    return '<div> The current weather is:</div>';
+  } else if (typeOfWeathercast == FORECAST ) {
+    return '<div>The forecast for then is:</div>';
+  } else if (typeOfWeathercast == CLIMATE ){
+    return '';
   } else {
-    return 'Typical weather for then';
+    throw new Error("Type of Weather forecast type is unrecogized");
   }
 }
 
@@ -142,7 +260,7 @@ async function fetchPixabayImageFromServer(input,imageElement) {
       return data;
     })
     .catch(function(error) {
-      console.log('Sorry error with getting sentiment',error);
+      console.log('Sorry error with getting pixabay image',error);
     });
 }
 
