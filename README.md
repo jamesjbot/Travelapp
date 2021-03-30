@@ -16,6 +16,9 @@ You can click remove trip to remove the destination.
 
 Click Add Another Trip Leg to select another destination.
 
+### TODO Extended Features Added
+
+
 ### Develop other features
 
 If you're going to make changes you can use the dev shortcut 'npm run dev'.
