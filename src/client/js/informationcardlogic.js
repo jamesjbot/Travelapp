@@ -125,7 +125,7 @@ async function createNewTravelInfoCard() {
 
   // Create travelCard
   var travelCard = document.createElement('div');
-  travelCard.classList.add("travelCard");
+  travelCard.classList.add("travel_card");
   // Destination Image Cretaion
   console.log('Calling fetchPixabay');
   var update_Image_Target = document.createElement('img');
@@ -139,19 +139,18 @@ async function createNewTravelInfoCard() {
 
   // Information stack
   var stack = document.createElement('div');
-  stack.classList.add("informationStack");
+  stack.classList.add("information_stack");
   stack.innerHTML =
-    `<div class='informationStack'>
-      <div>My Trip to: ${place_Name}</div>
+      `<div>My Trip to: ${place_Name}</div>
       <div>Departing: ${depart_Date.toDateString()}</div>
       <div>
         <button class='inline_button' onclick='Client.removeInformationCard(this)''>&minus; Remove Trip</button>
       </div>
       <div>${place_Name} is ${dateJSON.daysAway} ${dateJSON.daysLabel} away </div>
-      ${weatherForecastLabel(dateJSON.typeOfWeathercast)}
-      <!--div id="temperature_div">High 9999 Low -6666 </div-->
-      <!--div id="weather_descrition">Mostly cloudy throught the day </div-->
-    </div>`;
+      <div>${weatherForecastLabel(dateJSON.typeOfWeathercast)}</div>`;
+      // The weather if possible will fall below these lines like this,
+      //<!--div id="temperature_div">High 9999 Low -6666 </div-->
+      //<!--div id="weather_descrition">Mostly cloudy throught the day </div-->
 
   stack.appendChild(temperature_div);
   stack.appendChild(weather_description_div);

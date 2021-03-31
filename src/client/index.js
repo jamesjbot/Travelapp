@@ -84,8 +84,13 @@ function setDisplayToNone() {
 }
 
 function removeInformationCard(element) {
-  console.log('I got element', element.parentElement.parentElement.parentElement.parentElement.classList);
-  element.parentElement.parentElement.parentElement.parentElement.remove();
+  console.log('I got element', element.parentElement.parentElement.parentElement.classList);
+  let travelCard = element.parentElement.parentElement.parentElement;
+  if (travelCard.classList.contains('travel_card')) {
+    travelCard.remove();
+  } else {
+    throw error('You are removing the wrong element please check your parent element div nesting');
+  }
 }
 
 // Exported functions that can be used on the webpage with Client. syntax
