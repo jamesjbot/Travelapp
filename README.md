@@ -16,8 +16,9 @@ You can click remove trip to remove the destination.
 
 Click Add Another Trip Leg to select another destination.
 
-### TODO Extended Features Added
+### Extended Features Added
 
+Multiple Leg Trip are possible by clicking add leg button.
 
 ### Develop other features
 
