@@ -9,10 +9,10 @@ $font-color: #8CDFD6;
 $main-button-color: #085E1A;
 $input-background-color: #22b2da;
 
-.date {
-  display: flex;
-  flex-direction: column;
-}
+// .date {
+//   display: flex;
+//   flex-direction: column;
+// }
 
 .nativeDatePicker {
   display: block;
@@ -28,46 +28,16 @@ $input-background-color: #22b2da;
   display: block;
 }
 
-.warning {
-  visibility: hidden;
-}
-
-.inline_button {
-  width: auto;
-  height: auto;
-  border-radius: 50px;
-  background: white;
-  border: 2px solid black;
-  transition: background-color 0.5s;
-  font-weight: bolder;
-  font-size: large;
-  padding: 5px;
-  margin: 3px;
-}
-
-.inline_button:hover {
-  background-color: green;
-}
-
-.addTravelLegButton {
-  font-size: 25px;
-  font-family: 'Source Sans Pro', sans-serif;
-  width: 400px;
-  height: 100px;
-  background: $main-button-color;
-  border-radius: 50px;
-  border: none;
-  box-shadow: 2px 4px 5px #444;
-}
-
-#travelInfoButton {
-  margin: auto;
-}
-
-#entryHolder{
-  display: flex;
-  flex-direction: row;
-}
+// .addTravelLegButton {
+//   font-size: 25px;
+//   font-family: 'Source Sans Pro', sans-serif;
+//   width: 400px;
+//   height: 100px;
+//   background: $main-button-color;
+//   border-radius: 50px;
+//   border: none;
+//   box-shadow: 2px 4px 5px #444;
+// }
 
 ::placeholder { /* Firefox, Chrome, Opera */
     color: $font-color;
@@ -117,6 +87,10 @@ $input-background-color: #22b2da;
   margin: auto;
 }
 
+#travelInfoButton {
+  margin: auto;
+}
+
 .information_stack {
   display: flex;
   flex-direction: column;
@@ -149,17 +123,32 @@ input {
   margin:5px;
 }
 
+.inline_button {
+  width: auto;
+  height: auto;
+  border-radius: 50px;
+  background: white;
+  border: 2px solid black;
+  transition: background-color 0.5s;
+  font-weight: bolder;
+  font-size: large;
+  padding: 5px;
+  margin: 3px;
+}
+
+.inline_button:hover {
+  background-color: green;
+}
+
 .main_buttons {
   font-family: 'Source Sans Pro', sans-serif;
-  //background-color: $main-button-color;
   background-image: linear-gradient(180deg, $main-button-color,  #119c2e);
   color: $font-color;
-  //font-size: 26px;
-  //font-family: 'Oswald', sans-serif;
   border-radius: 50px;
   border: none;
   box-shadow: 2px 4px 5px #444;
   transition: color .5s, background-color .5s;
+  padding: 0px 15px;
 }
 
 .main_buttons:hover {
@@ -182,6 +171,10 @@ input {
   margin: 5px;
 }
 
+.warning {
+  visibility: hidden;
+}
+
 body{
     font-family: 'Source Sans Pro', sans-serif;
 }
@@ -198,7 +191,9 @@ img {
   margin: auto;
 }
 
+// Don't display anything under a certain size
 @media screen and (max-width:299px) {
+
   #app {
     display: none;
   }
@@ -211,8 +206,11 @@ img {
     max-width: 300px
   }
 
+  #pagetitle {
+    font-size: 20px;
+  }
+
   .holder {
-  //#listcontainer {
     display: flex;
     flex-direction: column;
     background-image: linear-gradient(217deg, $second-background-color, transparent);
@@ -225,8 +223,14 @@ img {
     align-items: center;
   }
 
-  #pagetitle {
-    font-size: 20px;
+  .inline_button {
+    font-size: xx-small;
+  }
+
+  .main_buttons {
+    width: 155px;
+    height: 55px;
+    font-size: 18px;
   }
 
   .travel_card {
@@ -241,12 +245,6 @@ img {
   label {
     font-size: 16px;
   }
-
-  .main_buttons {
-    width: 155px;
-    height: 55px;
-    font-size: 18px;
-  }
 }
 
 @media screen and (min-width: 500px) {
@@ -258,6 +256,10 @@ img {
 
   #pagetitle {
     font-size: 40px;
+  }
+
+  .inline_button {
+    font-size: small;
   }
 
   .main_buttons {
