@@ -10,17 +10,8 @@ var isDateSupported = function () {
 	return (input.value !== value);
 };
 
-//TODO Remove
-// if (isDateSupported()) {
-//   alert('You bet dates ARE SUPPORTED');
-//   // Create the initial user input card
-// } else {
-//   alert('THIS IS A JUNK BROWSER');
-// }
-
 
 function createUserInputCard() {
-  console.log('createUserInputCard called');
 
   // Just collapse the addLeg button so there is no space
   let addLegButton = document.getElementById('addTravelLegButton');

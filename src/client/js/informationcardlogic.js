@@ -207,10 +207,8 @@ function dateProcessing() {
 
 // Return the elapsed days between start and end dates
 function dateDifference(startDate, endDate) {
-  console.log(`entered dates start${startDate} end:${endDate}`);
   let millisecondDiff = endDate - startDate;
   let days = Math.ceil(millisecondDiff / (24*60*60*1000));
-  console.log(`${days} away`);
   return days;
 }
 
@@ -249,7 +247,6 @@ async function fetchPixabayImageFromServer(input,imageElement) {
       console.log(data);
       console.log(data.data);
       imageElement.src = data.data;
-      //console.log(data.stuff);
       return data;
     })
     .catch(function(error) {
