@@ -18,7 +18,9 @@ Click Add Another Trip Leg to select another destination.
 
 ### Extended Features Added
 
-Multiple Leg Trip are possible by clicking add leg button.
+Multiple Destination Trips are possible by clicking add leg button. The appropriate weather for location will be pulled in.
+
+Users can remove legs of a trip.
 
 ### Develop other features
 
