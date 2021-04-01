@@ -1,5 +1,8 @@
 
 /*jshint esversion:8*/
+import { isDateSupported } from './userinputcardlogic';
+import { dateFromGenericInputString } from './buttonpress';
+
 const CURRENT = 'CURRENT';
 const FORECAST = 'FORECAST';
 const CLIMATE = 'CLIMATE';
@@ -95,7 +98,12 @@ async function createNewTravelInfoCard() {
   let dateJSON = dateProcessing();
 
   let place_Name = document.getElementById('placename').value;
-  let depart_Date = new Date((document.getElementById('travelDay').value).replace(/-/g,'\/'));
+  let depart_Date;
+  if (isDateSupported()) {
+    depart_Date = new Date((document.getElementById('travelDay').value).replace(/-/g,'\/'));
+  } else {
+    depart_Date = dateFromGenericInputString(document.getElementById('travelDay').value);
+  }
 
   let temperature_div = document.createElement('div');
   let weather_description_div = document.createElement('div');
@@ -114,28 +122,17 @@ async function createNewTravelInfoCard() {
     weather_description_div.innerHTML = 'Travel date is too far to forecast weather';
   }
 
-
   // Show the Add Travel Leg Button
   let addLegButton = document.getElementById('addTravelLegButton');
-  console.log('Changing addtravellegButton to block');
   addLegButton.style.display = 'block';
-
-  //const placename = document.getElementById('placename');
-
 
   // Create travelCard
   var travelCard = document.createElement('div');
   travelCard.classList.add("travel_card");
+
   // Destination Image Cretaion
-  console.log('Calling fetchPixabay');
   var update_Image_Target = document.createElement('img');
   fetchPixabayImageFromServer(place_Name, update_Image_Target);
-
-  //TODO Return original code
-  //debugdelayedSetImage(placename, img);
-
-  console.log('Returned from calling fetchPixabay');
-  //img.setAttribute('src',imageAddress);
 
   // Information stack
   var stack = document.createElement('div');
@@ -166,13 +163,19 @@ async function createNewTravelInfoCard() {
 // Processes the date so that we know which type of forecast to display
 function dateProcessing() {
   // Process date entry logic.
-  let inputDate = document.getElementById('travelDay');
-  let travelDate = new Date((inputDate.value).replace(/-/g,'\/'));
-  let sixteenDaysFromToday = getFutureDateFrom(new Date(Date.now()),16);
-  let todaysDate = new Date(Date.now());
 
-  console.log(`today is ${todaysDate}`);
-  console.log(`travelday is ${travelDate}`);
+  let todaysDate = new Date(Date.now());
+  let sixteenDaysFromToday = getFutureDateFrom(new Date(Date.now()),16);
+
+  let inputDate = document.getElementById('travelDay');
+
+  let travelDate;
+  if (isDateSupported()) {
+    travelDate = new Date((inputDate.value).replace(/-/g,'\/'));
+  } else {
+    travelDate = dateFromGenericInputString(inputDate.value);
+  }
+
   let dateDiff = dateDifference(todaysDate,travelDate);
 
   // Default value for type of weathercase
@@ -183,19 +186,13 @@ function dateProcessing() {
     && travelDate.getDate() == todaysDate.getDate())
     {
    // If today retrieve current weatherURL
-    console.log('Your traveling today use current weather');
     typeOfWeathercast = CURRENT;
-    //fetchCurrent({lat:1, long:2});
 
   } else if (travelDate < sixteenDaysFromToday) {
     // If tomorrow till 16 days later use forecast
-    console.log('Your traveling in the forecastable region');
-    //fetchWeatherForecast({lat:1, long:2});
     typeOfWeathercast = FORECAST;
   } else {
-  // If past 16 days use historical numbers
-    console.log('We must use historical data');
-    //fetchClimateNormals({lat:1, long:2});
+  // We can't forcast that far
     typeOfWeathercast = CLIMATE;
   }
 
@@ -210,6 +207,7 @@ function dateProcessing() {
 
 // Return the elapsed days between start and end dates
 function dateDifference(startDate, endDate) {
+  console.log(`entered dates start${startDate} end:${endDate}`);
   let millisecondDiff = endDate - startDate;
   let days = Math.ceil(millisecondDiff / (24*60*60*1000));
   console.log(`${days} away`);

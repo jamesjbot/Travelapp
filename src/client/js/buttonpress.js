@@ -2,34 +2,10 @@
 
 import { createUserInputCard, isDateSupported } from './userinputcardlogic';
 import { createNewTravelInfoCard, dateDifference } from './informationcardlogic';
-//import getWeather from './getWeather';
 
 // icons for weatherbitApikey
 let base_icon_addr = 'https://www.weatherbit.io/static/img/icons/';
 //t01n.png
-
-// Get weather from our server
-// function getWeather(latlongJSON, weatherType){
-//    console.log('buttonpress getLatLongLocation recevied:',input);
-//    const jsonText = {data: input};
-//     fetch('http://localhost:9000/location', {
-//      method: 'POST',
-//      credentials: 'same-origin',
-//      headers: {'Content-Type': 'application/json'},
-//      body: JSON.stringify(jsonText)
-//    })
-//    .then( res => res.json() )
-//    .then( data => {
-//      console.log('buttonpress Received JSON', typeof data);
-//      console.log(data);
-//      //console.log(data.data);
-//      //console.log(data.stuff);
-//      return data;
-//    })
-//    .catch(function(error) {
-//      console.log('Sorry error with getting location',error);
-//    });
-// }
 
 function addTravelCard() {
   console.log('Add travel card presed ');
@@ -90,16 +66,27 @@ function userInputIsValid() {
   return overallValidity;
 }
 
+function dateFromGenericInputString(genericDateString) {
+  console.log('--> The date received is',genericDateString);
+  let year = genericDateString.substring(6);
+  let month = genericDateString.substring(3,5) - 1;
+  let day = genericDateString.substring(0,2);
+  let travelDate = new Date(year, month, day);
+  return travelDate;
+}
+
 function isGenericInputDateTypeValid() {
   let overallValidity = true;
   let regExp = /^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/gi; // Non characters like blanks commas
 
   let inputDate = document.getElementById('travelDay');
 
-  let year = inputDate.value.substring(6);
-  let month = inputDate.value.substring(3,5) - 1;
-  let day = inputDate.value.substring(0,2);
-  let travelDate = new Date(year, month, day);
+  // let year = inputDate.value.substring(6);
+  // let month = inputDate.value.substring(3,5) - 1;
+  // let day = inputDate.value.substring(0,2);
+  // let travelDate = new Date(year, month, day);
+
+  let travelDate = dateFromGenericInputString(inputDate.value);
   let todaysDate = new Date(Date.now());
 
   console.log('The inputdate is',inputDate.value);
@@ -193,4 +180,5 @@ function deleteLastUserInputCard() {
   document.getElementById('listcontainer').removeChild(inputCard);
 }
 
-export { addUserInputCard, replaceWithInfoCard, validateTodaysDateWith };
+export { addUserInputCard, replaceWithInfoCard,
+  validateTodaysDateWith, dateFromGenericInputString };
