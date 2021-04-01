@@ -20,8 +20,7 @@ function createUserInputCard() {
   var userInputCard = document.createElement('div');
   userInputCard.setAttribute('id','lastUserInputCard');
   userInputCard.classList.add('input_card');
-  // TODO: Add a class
-  //userInputCard.classList.add();
+
   let placename = document.createElement('div');
   placename.innerHTML =
     `<label for="zip">Enter Placename here</label>
