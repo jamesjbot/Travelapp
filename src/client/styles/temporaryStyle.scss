@@ -9,36 +9,6 @@ $font-color: #8CDFD6;
 $main-button-color: #085E1A;
 $input-background-color: #22b2da;
 
-// .date {
-//   display: flex;
-//   flex-direction: column;
-// }
-
-.nativeDatePicker {
-  display: block;
-  flex-direction: column;
-}
-
-.fallbackDatePicker {
-  display: block;
-  flex-direction: column;
-}
-
-.fallbackLabel {
-  display: block;
-}
-
-// .addTravelLegButton {
-//   font-size: 25px;
-//   font-family: 'Source Sans Pro', sans-serif;
-//   width: 400px;
-//   height: 100px;
-//   background: $main-button-color;
-//   border-radius: 50px;
-//   border: none;
-//   box-shadow: 2px 4px 5px #444;
-// }
-
 ::placeholder { /* Firefox, Chrome, Opera */
     color: $font-color;
     font-family: 'Source Sans Pro', sans-serif;
@@ -127,7 +97,7 @@ input {
   width: auto;
   height: auto;
   border-radius: 50px;
-  background: white;
+  background-color: white;
   border: 2px solid black;
   transition: background-color 0.5s;
   font-weight: bolder;
@@ -147,12 +117,12 @@ input {
   border-radius: 50px;
   border: none;
   box-shadow: 2px 4px 5px #444;
-  transition: color .5s, background-color .5s;
+  transition: color .5s, background-image .5s;
   padding: 0px 15px;
 }
 
 .main_buttons:hover {
-  background-color: $font-color;
+  background-image: $font-color;
   color: $main-button-color;
 }
 
