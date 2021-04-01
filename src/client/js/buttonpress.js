@@ -1,13 +1,12 @@
 /*jshint esversion:8*/
 
-import createUserInputCard from './userinputcardlogic';
+import { createUserInputCard, isDateSupported } from './userinputcardlogic';
 import { createNewTravelInfoCard, dateDifference } from './informationcardlogic';
 //import getWeather from './getWeather';
 
 // icons for weatherbitApikey
 let base_icon_addr = 'https://www.weatherbit.io/static/img/icons/';
 //t01n.png
-
 
 // Get weather from our server
 // function getWeather(latlongJSON, weatherType){
@@ -67,41 +66,119 @@ function replaceWithInfoCard() {
     //createNewTravelInfoCard(userData);
     createNewTravelInfoCard();
     deleteLastUserInputCard();
+  } else {
+    console.log('user input in invalid');
   }
 }
 
 function userInputIsValid() {
-  var overallValidity = true;
-  console.log(document.getElementById('placename').value);
+  let overallValidity = true;
+
+  // Check date validity
+  if (isDateSupported()) { // Input object is date type
+    if (!isInputDateTypeValid()) overallValidity = false;
+  } else { // Genric Input Object in form
+    if (!isGenericInputDateTypeValid())  overallValidity = false;
+    console.log('the overall validity from generic is', overallValidity);
+  }
+
+  // Check placename validity
+  if (!isPlacenameValid()) { //Only override overallValidity if invalid
+    overallValidity = false;
+  }
+
+  return overallValidity;
+}
+
+function isGenericInputDateTypeValid() {
+  let overallValidity = true;
+  let regExp = /^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[13-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/gi; // Non characters like blanks commas
+
   let inputDate = document.getElementById('travelDay');
-  let travelDate = new Date((inputDate.value).replace(/-/g,'\/'));
+
+  let year = inputDate.value.substring(6);
+  let month = inputDate.value.substring(3,5) - 1;
+  let day = inputDate.value.substring(0,2);
+  let travelDate = new Date(year, month, day);
   let todaysDate = new Date(Date.now());
 
-  if (!inputDate.value) {
+  console.log('The inputdate is',inputDate.value);
+
+  if (!regExp.test(inputDate.value)) {
+    console.log('its not passing the simple regExp test');
     overallValidity = false;
-    console.log('date input is null', inputDate.value);
+    return overallValidity;
+  }
+
+  let validityOfDate = validateTodaysDateWith(travelDate);
+  console.log('the validityOfDate is:',validityOfDate);
+  if (!validityOfDate) overallValidity = false;
+  return overallValidity;
+  // if (!regExp.test(inputDate))  {
+  //   overallValidity = false;
+  //   console.log('date input is invalid', inputDate.value);
+  //   document.getElementById('travelDayWarning').style.visibility = 'visible';
+  // } else if (dateDifference(todaysDate,travelDate) < 0) {
+  //   overallValidity = false;
+  //   console.log('Cannot travel yesterday');
+  //   document.getElementById('travelDayWarning').style.visibility = 'visible';
+  // } else {
+  //   console.log('date input is good', inputDate.value);
+  //   console.log(`date length ${inputDate.value.length}`);
+  //   document.getElementById('travelDayWarning').style.visibility = 'hidden';
+  // }
+}
+
+function isInputDateTypeValid() {
+  var overallValidity = true;
+  console.log(document.getElementById('placename').value);
+
+  let inputDate = document.getElementById('travelDay');
+  let travelDate = new Date((inputDate.value).replace(/-/g,'\/'));
+  //let todaysDate = new Date(Date.now());
+
+  if (!inputDate.value) {
     document.getElementById('travelDayWarning').style.visibility = 'visible';
-  } else if (dateDifference(todaysDate,travelDate) < 0) {
+    return false;
+  }
+
+  let validityOfDate = validateTodaysDateWith(travelDate);
+
+  if (!validityOfDate) overallValidity = false;
+  return overallValidity;
+
+}
+
+function validateTodaysDateWith(travelDate) {
+  let overallValidity = true;
+  let todaysDate = new Date(Date.now());
+  // if (date)  {
+  //   overallValidity = false;
+  //   console.log('date input is invalid');
+  //   document.getElementById('travelDayWarning').style.visibility = 'visible';
+  //} else
+  if (dateDifference(todaysDate,travelDate) < 0) {
     overallValidity = false;
     console.log('Cannot travel yesterday');
     document.getElementById('travelDayWarning').style.visibility = 'visible';
   } else {
-    console.log('date input is good', inputDate.value);
-    console.log(`date length ${inputDate.value.length}`);
     document.getElementById('travelDayWarning').style.visibility = 'hidden';
   }
+  return overallValidity;
+}
 
+
+function isPlacenameValid() {
   let placeValue = document.getElementById('placename').value;
   if ( placeValue != null && placeValue != "") {
      document.getElementById('placenameWarning').style.visibility = 'hidden';
      console.log(`the inputvalue:${placeValue}:|`);
+     return true;
    } else {
-     overallValidity = false;
      document.getElementById('placenameWarning').style.visibility = 'visible';
+     return false;
    }
-   return overallValidity;
 }
-
 
 function gatherDataFromUserToJSON() {
   let inputCard = document.getElementById('lastUserInputCard');
@@ -116,6 +193,4 @@ function deleteLastUserInputCard() {
   document.getElementById('listcontainer').removeChild(inputCard);
 }
 
-
-
-export { addUserInputCard, replaceWithInfoCard };
+export { addUserInputCard, replaceWithInfoCard, validateTodaysDateWith };

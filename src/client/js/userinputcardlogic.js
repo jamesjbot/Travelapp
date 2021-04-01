@@ -1,6 +1,24 @@
 
 /* jshint esversion:8*/
 
+// Test if browser has date inputs
+var isDateSupported = function () {
+	var input = document.createElement('input');
+	var value = 'a';
+	input.setAttribute('type', 'date');
+	input.setAttribute('value', value);
+	return (input.value !== value);
+};
+
+//TODO Remove
+// if (isDateSupported()) {
+//   alert('You bet dates ARE SUPPORTED');
+//   // Create the initial user input card
+// } else {
+//   alert('THIS IS A JUNK BROWSER');
+// }
+
+
 function createUserInputCard() {
   console.log('createUserInputCard called');
 
@@ -20,9 +38,9 @@ function createUserInputCard() {
     <label class="warning" id="placenameWarning" visibility="hidden">Enter a valid place name (hint: city, state)</label>`
   let travelDate = document.createElement('div');
   travelDate.innerHTML =
-    `<label for="bday">Enter your date of Travel:</label>
-    <input type="date" class='input_area' id="travelDay" name="travelDay">
-    <label class="warning" id="travelDayWarning" visibility="hidden">Enter a valid date</label>`;
+    `<label>Enter your date of Travel:</label>
+    ${inputDatepicker()}
+    <label class="warning" id="travelDayWarning" visibility="hidden">${warningMessage()}</label>`;
 
   //add a submit button
   let submitButton = document.createElement('button');
@@ -42,4 +60,20 @@ function createUserInputCard() {
   cardContainer.insertBefore(userInputCard, addLegButton);
 }
 
-export default createUserInputCard ;
+function inputDatepicker() {
+  if (isDateSupported()) {
+    return `<input type="date" class='input_area' id="travelDay" name="travelDay">`;
+  } else {
+    return `<input type='text' class='input_area' placeholder='DD/MM/YYYY' id="travelDay" name="travelDay">`;
+  }
+}
+
+function warningMessage() {
+  if (isDateSupported()) {
+    return `Enter a valid date`;
+  } else {
+    return `Enter a valid date of the form DD/MM/YYYY`;
+  }
+}
+
+export {isDateSupported, createUserInputCard };

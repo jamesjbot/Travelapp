@@ -163,10 +163,6 @@ async function createNewTravelInfoCard() {
   cardContainer.insertBefore(travelCard, addLegButton);
 }
 
-function displayParentName(element) {
-  console.log('I got element', element);
-}
-
 // Processes the date so that we know which type of forecast to display
 function dateProcessing() {
   // Process date entry logic.
@@ -263,4 +259,4 @@ async function fetchPixabayImageFromServer(input,imageElement) {
     });
 }
 
-export { createNewTravelInfoCard, dateDifference, displayParentName };
+export { createNewTravelInfoCard, dateDifference, getFutureDateFrom };
