@@ -7,11 +7,6 @@ import { createNewTravelInfoCard, dateDifference } from './informationcardlogic'
 let base_icon_addr = 'https://www.weatherbit.io/static/img/icons/';
 //t01n.png
 
-function addTravelCard() {
-  console.log('Add travel card presed ');
-  createNewTravelInfoCard();
-}
-
 function addUserInputCard() {
   console.log('Add User Input card Called');
   createUserInputCard();
@@ -20,29 +15,12 @@ function addUserInputCard() {
 function replaceWithInfoCard() {
   console.log('You want to replace with Information Card');
 
-  // Get placename and latitude and longitude
-  const placename = document.getElementById('placename');
-  // Make call to get lat long from geonames
-
-  //TODO Call the server for location data
-
   if (userInputIsValid()) {
-    // Pull user data parse for use with creating new TravelInfoCard;
-    //let userData = gatherDataFromUserToJSON();
-    let placeName = document.getElementById('placename').value;
-    console.log('button press userData:',placeName);
 
-    //let latlong = getLatLongLocation(placeName);
-    let travelDate = document.getElementById('travelDay').value;
-    //let weather = getWeather(latlong,travelDate);
-
-
-    //console.log('buttonpress getLatLongLocation latlong:', latlong);
-    //console.log(`We received location:${userData.latlong.lat},${userData.latlong.long}`);
-    //createNewTravelInfoCard(userData);
     createNewTravelInfoCard();
     deleteLastUserInputCard();
   } else {
+
     console.log('user input in invalid');
   }
 }
@@ -55,7 +33,6 @@ function userInputIsValid() {
     if (!isInputDateTypeValid()) overallValidity = false;
   } else { // Genric Input Object in form
     if (!isGenericInputDateTypeValid())  overallValidity = false;
-    console.log('the overall validity from generic is', overallValidity);
   }
 
   // Check placename validity
@@ -67,7 +44,6 @@ function userInputIsValid() {
 }
 
 function dateFromGenericInputString(genericDateString) {
-  console.log('--> The date received is',genericDateString);
   let year = genericDateString.substring(6);
   let month = genericDateString.substring(3,5) - 1;
   let day = genericDateString.substring(0,2);
@@ -81,48 +57,26 @@ function isGenericInputDateTypeValid() {
 
   let inputDate = document.getElementById('travelDay');
 
-  // let year = inputDate.value.substring(6);
-  // let month = inputDate.value.substring(3,5) - 1;
-  // let day = inputDate.value.substring(0,2);
-  // let travelDate = new Date(year, month, day);
-
   let travelDate = dateFromGenericInputString(inputDate.value);
   let todaysDate = new Date(Date.now());
 
-  console.log('The inputdate is',inputDate.value);
-
   if (!regExp.test(inputDate.value)) {
-    console.log('its not passing the simple regExp test');
     overallValidity = false;
     return overallValidity;
   }
 
   let validityOfDate = validateTodaysDateWith(travelDate);
-  console.log('the validityOfDate is:',validityOfDate);
   if (!validityOfDate) overallValidity = false;
   return overallValidity;
-  // if (!regExp.test(inputDate))  {
-  //   overallValidity = false;
-  //   console.log('date input is invalid', inputDate.value);
-  //   document.getElementById('travelDayWarning').style.visibility = 'visible';
-  // } else if (dateDifference(todaysDate,travelDate) < 0) {
-  //   overallValidity = false;
-  //   console.log('Cannot travel yesterday');
-  //   document.getElementById('travelDayWarning').style.visibility = 'visible';
-  // } else {
-  //   console.log('date input is good', inputDate.value);
-  //   console.log(`date length ${inputDate.value.length}`);
-  //   document.getElementById('travelDayWarning').style.visibility = 'hidden';
-  // }
 }
 
+// Validity of input with type date
 function isInputDateTypeValid() {
   var overallValidity = true;
   console.log(document.getElementById('placename').value);
 
   let inputDate = document.getElementById('travelDay');
   let travelDate = new Date((inputDate.value).replace(/-/g,'\/'));
-  //let todaysDate = new Date(Date.now());
 
   if (!inputDate.value) {
     document.getElementById('travelDayWarning').style.visibility = 'visible';
@@ -133,20 +87,15 @@ function isInputDateTypeValid() {
 
   if (!validityOfDate) overallValidity = false;
   return overallValidity;
-
 }
 
 function validateTodaysDateWith(travelDate) {
   let overallValidity = true;
   let todaysDate = new Date(Date.now());
-  // if (date)  {
-  //   overallValidity = false;
-  //   console.log('date input is invalid');
-  //   document.getElementById('travelDayWarning').style.visibility = 'visible';
-  //} else
+
   if (dateDifference(todaysDate,travelDate) < 0) {
+    // Travelling before today
     overallValidity = false;
-    console.log('Cannot travel yesterday');
     document.getElementById('travelDayWarning').style.visibility = 'visible';
   } else {
     document.getElementById('travelDayWarning').style.visibility = 'hidden';
