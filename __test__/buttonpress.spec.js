@@ -1,14 +1,13 @@
 
 /*jshint esversion:8*/
 import { validateTodaysDateWith } from "../src/client/js/buttonpress";
-//import { getFutureDateFrom } from '../src/client/js/informationcardlogic';
 import 'regenerator-runtime/runtime';
 
 describe("buttonpress datelogic tests", () => {
 
   // Given: A basic HTML DOM
   document.body.outerHTML = '<div id="travelDayWarning">warning</div>';
-  //document.getElementById('travelDayWarning').style.visibility = 'visible';
+  // And functions
   function getFutureDateFrom(date, daysAhead) {
     return new Date(date.getTime() +  (daysAhead * 24 * 60 * 60 * 1000));
   }
@@ -20,12 +19,17 @@ describe("buttonpress datelogic tests", () => {
     return days;
   }
 
-  // When:
-	test("validateTodaysDateWith Travel Date function with todays date", () => {
-    // Then:
+	test("validateTodaysDateWith Travel Date function with various dates", () => {
+
     expect(validateTodaysDateWith).toBeDefined();
+    // When: today's date is entered
+    // Then: It will be a valid date
     expect(validateTodaysDateWith(new Date(Date.now()))).toBeTruthy();
+    // When: A date 2 days prior to today is entered
+    // Then: This will be an invalid date
     expect(validateTodaysDateWith(getFutureDateFrom(new Date(Date.now()),-2))).toBeFalsy();
+    // When: A date 16 days in the future is provided
+    // Then: This will be a valid date
     expect(validateTodaysDateWith(getFutureDateFrom(new Date(Date.now()),16))).toBeTruthy();
 	});
 
