@@ -11,7 +11,7 @@ const CLIMATE = 'CLIMATE';
 
 async function createNewTravelInfoCard() {
 
-  let dateJSON = dateProcessing();
+  let dateJSON = convertInputDateToJSON();
 
   let place_Name = document.getElementById('placename').value;
   let depart_Date = convertInputDateToJavascriptDate();
@@ -174,7 +174,7 @@ function updateUIElementsBasedOn(typeOfWeathercast,
 
 
 // Processes the date so that we know which type of forecast to display
-function dateProcessing() {
+function convertInputDateToJSON() {
   // Process date entry logic.
 
   let todaysDate = new Date(Date.now());
