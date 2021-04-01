@@ -4,7 +4,6 @@
 //TODO Remove Async
 //async function getWeather(latLongJSON,travelDate) {
 function getWeatherPromise(lat_long_JSON, weather_Type, date) {
-    console.log('-->getWeather received', lat_long_JSON, weather_Type);
     const jsonText = {latLong: lat_long_JSON,
                       weatherType: weather_Type,
                       month_day:date};
