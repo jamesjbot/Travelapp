@@ -3,25 +3,16 @@
 import { createUserInputCard, isDateSupported } from './userinputcardlogic';
 import { createNewTravelInfoCard, dateDifference } from './informationcardlogic';
 
-// icons for weatherbitApikey
-let base_icon_addr = 'https://www.weatherbit.io/static/img/icons/';
-//t01n.png
-
 function addUserInputCard() {
-  console.log('Add User Input card Called');
   createUserInputCard();
 }
 
 function replaceWithInfoCard() {
-  console.log('You want to replace with Information Card');
-
   if (userInputIsValid()) {
-
     createNewTravelInfoCard();
     deleteLastUserInputCard();
   } else {
-
-    console.log('user input in invalid');
+    console.log('User Input is Invalid!');
   }
 }
 
@@ -73,7 +64,6 @@ function isGenericInputDateTypeValid() {
 // Validity of input with type date
 function isInputDateTypeValid() {
   var overallValidity = true;
-  console.log(document.getElementById('placename').value);
 
   let inputDate = document.getElementById('travelDay');
   let travelDate = new Date((inputDate.value).replace(/-/g,'\/'));
@@ -108,7 +98,6 @@ function isPlacenameValid() {
   let placeValue = document.getElementById('placename').value;
   if ( placeValue != null && placeValue != "") {
      document.getElementById('placenameWarning').style.visibility = 'hidden';
-     console.log(`the inputvalue:${placeValue}:|`);
      return true;
    } else {
      document.getElementById('placenameWarning').style.visibility = 'visible';
