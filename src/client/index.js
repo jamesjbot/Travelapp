@@ -3,7 +3,7 @@
 
 import { addUserInputCard, replaceWithInfoCard} from './js/buttonpress';
 
-import './styles/temporaryStyle.scss';
+import './styles/style.scss';
 
 // Attach EventListener to button
 const legbutton = document.getElementById('addTravelLegButton');
