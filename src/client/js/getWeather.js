@@ -1,8 +1,6 @@
 
 /*jshint esversion:8*/
 
-//TODO Remove Async
-//async function getWeather(latLongJSON,travelDate) {
 function getWeatherPromise(lat_long_JSON, weather_Type, date) {
     const jsonText = {latLong: lat_long_JSON,
                       weatherType: weather_Type,
