@@ -9,10 +9,6 @@ import './styles/temporaryStyle.scss';
 const legbutton = document.getElementById('addTravelLegButton');
 legbutton.addEventListener("click", addUserInputCard);
 
-//TODO Remove from production forced leg to none
-//legbutton.style.display = 'none';
-
-
 addUserInputCard();
 
 function removeInformationCard(element) {
