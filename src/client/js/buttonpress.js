@@ -1,7 +1,8 @@
 /*jshint esversion:8*/
 
 import { createUserInputCard, isDateSupported } from './userinputcardlogic';
-import { createNewTravelInfoCard, dateDifference } from './informationcardlogic';
+import { createNewTravelInfoCard,  } from './informationcardlogic';
+import { dateDifference } from './datelogic';
 
 function addUserInputCard() {
   createUserInputCard();
