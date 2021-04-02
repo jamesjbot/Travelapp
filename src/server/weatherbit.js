@@ -22,7 +22,6 @@ function retrieveWeatherDataFromWeatherBit(lat,
   return fetch(constructWeatherbitURL(lat,lon, weatherType, month_day, key))
           .then( response => response.json() )
           .then(json => {
-            console.log('-->Response from weatherbit:', json);
             if (weatherType == CURRENT){
               return {temp:json.data[0].temp,
                       description: json.data[0].weather.description,
@@ -43,48 +42,24 @@ function retrieveWeatherDataFromWeatherBit(lat,
 
 function constructWeatherbitURL(lat, lon, weatherType, month_day, key) {
   if (weatherType == CURRENT) {
-    console.log(`${weatherbitCurrentURL}&lat=${lat}&lon=${lon}&key=${key}`);
+    //console.log(`${weatherbitCurrentURL}&lat=${lat}&lon=${lon}&key=${key}`);
     return `${weatherbitCurrentURL}&lat=${lat}&lon=${lon}&key=${key}`;
   } else if (weatherType == FORECAST) {
-    console.log(`${weatherbitForecastURL}&lat=${lat}&lon=${lon}&key=${key}`);
+    //console.log(`${weatherbitForecastURL}&lat=${lat}&lon=${lon}&key=${key}`);
     return `${weatherbitForecastURL}&lat=${lat}&lon=${lon}&key=${key}`;
   } else if (weatherType == CLIMATE) {
+    throw 'Weatherbit climate unsupported';
     //let start_date = `${minTwoDigits((date.getMonth() + 1))}-${minTwoDigits(date.getDate())}`;
-    let start_date = `${minTwoDigits((month_day.month + 1))}-${minTwoDigits(month_day.day)}`;
-    console.log('climate date',start_date);
-    console.log(`${weatherbitClimateNormalsDailyURL}&start_day=${start_date}
-    &end_day=${start_date}&lat=${lat}&lon=${lon}&key=${key}`);
-    return `${weatherbitClimateNormalsDailyURL}&start_day=${start_date}
-    &end_day=${start_date}&lat=${lat}&lon=${lon}&key=${key}`;
+    //let start_date = `${minTwoDigits((month_day.month + 1))}-${minTwoDigits(month_day.day)}`;
+    //console.log(`${weatherbitClimateNormalsDailyURL}&start_day=${start_date}
+    //&end_day=${start_date}&lat=${lat}&lon=${lon}&key=${key}`);
+    //return `${weatherbitClimateNormalsDailyURL}&start_day=${start_date}
+    //&end_day=${start_date}&lat=${lat}&lon=${lon}&key=${key}`;
   }
 }
 
 function minTwoDigits(n) {
   return (n < 10 ? '0' : '') + n;
-}
-
-function fetchCurrent(input) {
-    console.log('Fetching Current Weather');
-    const address = `${weatherbitCurrentURL}`;
-    //&key=${weatherbitApikey}`;
-    console.log(address);
-    //return fetch(address);
-}
-
-function fetchWeatherForecast(input) {
-    console.log('Fetching Forecast Weather');
-    const address = `${weatherbitForecastURL}`;
-    //`&key=${weatherbitApikey}`;
-    console.log(address);
-    //return fetch(address);
-}
-
-function fetchClimateNormals(input) {
-    console.log('Fetching Climate Normals Weather');
-    const address = `${weatherbitClimateNormalsDailyURL}`;
-    //`&key=${weatherbitApikey}`;
-    console.log(address);
-    //return fetch(address);
 }
 
 
