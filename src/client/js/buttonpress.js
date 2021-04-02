@@ -64,7 +64,7 @@ function isGenericInputDateTypeValid() {
 
 // Validity of input with type date
 function isInputDateTypeValid() {
-  var overallValidity = true;
+  let overallValidity = true;
 
   let inputDate = document.getElementById('travelDay');
   let travelDate = new Date((inputDate.value).replace(/-/g,'\/'));

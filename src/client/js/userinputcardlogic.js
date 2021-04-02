@@ -2,9 +2,9 @@
 /* jshint esversion:8*/
 
 // Test if browser has date inputs
-var isDateSupported = function () {
-	var input = document.createElement('input');
-	var value = 'a';
+let isDateSupported = function () {
+	let input = document.createElement('input');
+	let value = 'a';
 	input.setAttribute('type', 'date');
 	input.setAttribute('value', value);
 	return (input.value !== value);
@@ -17,7 +17,7 @@ function createUserInputCard() {
   let addLegButton = document.getElementById('addTravelLegButton');
   addLegButton.style.display = 'none';
 
-  var userInputCard = document.createElement('div');
+  let userInputCard = document.createElement('div');
   userInputCard.setAttribute('id','lastUserInputCard');
   userInputCard.classList.add('input_card');
 

@@ -43,19 +43,17 @@ const server = app.listen(port,() => {console.log(`running on port ${port}`);});
 
 // Routes
 app.post('/location', function(req, res) {
-    console.log('server.js /location received',req.body.data);
+    console.log('server.js /location request');
     let placename = req.body.data;
     let key = process.env.GEONAMES_API_KEY;
     location.retrieveLatLonLocationOf(placename,key).then(jsonLatLong => {
-      console.log('Server route /location sending back response.');
-      console.log(jsonLatLong);
       res.send(jsonLatLong);
     });
 });
 
 // Getting Pixabay Images without exposing our API_KEY
 app.post('/pixabay', function (req, res) {
-    console.log('server.js /pixabay route called');
+    console.log('server.js /pixabay request');
     let input = req.body.data;
     let regExp = /[^a-z]+/gi; // Non characters like blanks commas
     let searchText = input.replace(regExp, '+');
@@ -65,7 +63,7 @@ app.post('/pixabay', function (req, res) {
       .then(json => {
         // Pick the first Preview Image URL or Return with nothings
         if (json.total != 0) {
-            console.log(`pixabay respondeded with ${json.hits[0].previewURL}`);
+            //console.log(`pixabay respondeded with ${json.hits[0].previewURL}`);
             res.send({'data':json.hits[0].previewURL});
           } else {
             console.log('The response had zero hits');
@@ -76,7 +74,7 @@ app.post('/pixabay', function (req, res) {
 
 // Get weather from weatherbit
 app.post('/weather', function (req, res) {
-    console.log('User request weather data',req.body);
+    console.log('server.js /weather request');
     let key = process.env.WEATHERBIT_API_KEY;
     weatherbit.retrieveWeatherDataFromWeatherBit(req.body.latLong.lat,
                                                  req.body.latLong.long,
@@ -84,7 +82,6 @@ app.post('/weather', function (req, res) {
                                                  req.body.month_day,
                                                  key)
     .then( data => {
-      console.log('Data received from weatherbit',data);
       res.send(data);
     })
     .catch( function(error) {
