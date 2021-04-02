@@ -22,6 +22,10 @@ Multiple Destination Trips are possible by clicking add leg button. The appropri
 
 Users can remove legs of a trip.
 
+If an image cannot be found the user will be notified in the image's figure_caption
+
+The user may name a place improperly so the location that we looked up will appear in the line that shows how many days away the trip is.
+
 ### Develop other features
 
 If you're going to make changes you can use the dev shortcut 'npm run dev'.
