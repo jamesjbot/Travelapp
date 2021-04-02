@@ -180,13 +180,11 @@ function updateUIElementsBasedOn(typeOfWeathercast,
   if (typeOfWeathercast == CURRENT){
 
     uiupdate_temperature.innerHTML = `Temperature: ${data.temp}`;
-    // TODO This is duplicated change to a function
     uiupdate_weather_description.innerHTML = data.description;
 
   } else if (typeOfWeathercast == FORECAST) {
 
     uiupdate_temperature.innerHTML = `High: ${data.hitemp} Low: ${data.lowtemp}`;
-    // TODO this is duplicated create a function
     uiupdate_weather_description.innerHTML = data.description;
 
   } else if (typeOfWeathercast == CLIMATE){
