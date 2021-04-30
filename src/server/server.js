@@ -4,7 +4,8 @@ const weatherbit = require('./weatherbit');
 const pixabay = require('./pixabay');
 
 // Setup empty JS object to act as endpoint for all routes
-projectData = {};
+// TODO Remove
+//projectData = {};
 
 // Setup environment variables to hide apikeys
 const dotEnv = require('dotenv'); // Used to get apikey from the environment
@@ -39,7 +40,16 @@ app.use(express.static('dist'));
 
 // Setup Server
 const port = 9000;
-const server = app.listen(port,() => {console.log(`running on port ${port}`);});
+const server = app.listen(port,() => {
+  //console.log(`running on port ${port}`);
+});
+
+app.get('/test', function(req, res) {
+    console.log('Test route hit');
+    res.status(200);
+    res.send({data:'hello world', marssage:'blah blah'});
+    //res.send({data:'hello world'});
+});
 
 // Routes
 app.post('/location', function(req, res) {
@@ -82,6 +92,7 @@ app.post('/weather', function (req, res) {
                                                  req.body.month_day,
                                                  key)
     .then( data => {
+      console.log('Data received from weatherbit',data);
       res.send(data);
     })
     .catch( function(error) {
@@ -89,3 +100,5 @@ app.post('/weather', function (req, res) {
       res.send({high:99, low:66, description: 'Error Calling Weatherbit'});
     });
 });
+
+module.exports = server;
