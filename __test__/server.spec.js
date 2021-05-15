@@ -13,7 +13,7 @@ const app = require('../src/server/server');
 
 describe('Post User Data Endpoint', () => {
   it('Testing Post User Data route', async () => {
-    let userdata = {place: 'NY, NY' };
+    let userdata = {place: 'NY, NY'};
     const res = await request(app)
       .post('/postUserData')
       .send(userdata)
