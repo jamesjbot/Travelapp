@@ -3,9 +3,11 @@ const location = require('./location');
 const weatherbit = require('./weatherbit');
 const pixabay = require('./pixabay');
 
-// Setup empty JS object to act as endpoint for all routes
-// TODO Remove
-//projectData = {};
+// Setup empty JS object to act as storage for user data
+let userData = {};
+
+//TODO setup get of collected Data
+//TODO setup three post of foreign Data or one post
 
 // Setup environment variables to hide apikeys
 const dotEnv = require('dotenv'); // Used to get apikey from the environment
@@ -41,19 +43,31 @@ app.use(express.static('dist'));
 // Setup Server
 const port = 9000;
 const server = app.listen(port,() => {
-  //console.log(`running on port ${port}`);
-});
-
-app.get('/test', function(req, res) {
-    console.log('Test route hit');
-    res.status(200);
-    res.send({data:'hello world', marssage:'blah blah'});
-    //res.send({data:'hello world'});
+  console.log(`running on port ${port}`);
 });
 
 // Routes
+
+app.post('/postUserData', function(req, res){
+    console.log('server.js /postUserData');
+    console.log('server.js request received', req.body);
+    userData = req.body;
+    console.log('Received', userData);
+    res.status(200);
+    res.send();
+});
+
+
+app.get('/getUserData', function(req, res){
+    console.log('server.js /getUserData');
+    console.log('sending',userData);
+    res.send(userData);
+});
+
+// Get lat long from third party provider
 app.post('/location', function(req, res) {
     console.log('server.js /location request');
+    console.log('server.js request received', req.body.data);
     let placename = req.body.data;
     let key = process.env.GEONAMES_API_KEY;
     location.retrieveLatLonLocationOf(placename,key).then(jsonLatLong => {
@@ -64,6 +78,7 @@ app.post('/location', function(req, res) {
 // Getting Pixabay Images without exposing our API_KEY
 app.post('/pixabay', function (req, res) {
     console.log('server.js /pixabay request');
+    console.log('server.js request received', req.body.data);
     let input = req.body.data;
     let regExp = /[^a-z]+/gi; // Non characters like blanks commas
     let searchText = input.replace(regExp, '+');
@@ -85,10 +100,15 @@ app.post('/pixabay', function (req, res) {
 // Get weather from weatherbit
 app.post('/weather', function (req, res) {
     console.log('server.js /weather request');
+    console.log('weathertype',req.body.weatherType);
+    console.log('server.js request received', req.body.data);
+
+    console.log('req.body',req.body);
     let key = process.env.WEATHERBIT_API_KEY;
     weatherbit.retrieveWeatherDataFromWeatherBit(req.body.latLong.lat,
                                                  req.body.latLong.long,
                                                  req.body.weatherType,
+                                                 req.body.daysAway,
                                                  req.body.month_day,
                                                  key)
     .then( data => {
