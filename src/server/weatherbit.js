@@ -17,20 +17,24 @@ const regularExpression = new RegExp('/[^A-Za-z]+/');
 function retrieveWeatherDataFromWeatherBit(lat,
                                            lon,
                                            weatherType,
+                                           daysAway,
                                            month_day,
                                            key) {
-  return fetch(constructWeatherbitURL(lat,lon, weatherType, month_day, key))
+  return fetch(constructWeatherbitURL(lat, lon, weatherType, month_day, key))
           .then( response => response.json() )
           .then(json => {
+            // TODO Find the correct weatehr
+            console.log('We need to pick the correct forecast weather');
+            console.log('weather',json);
             if (weatherType == CURRENT){
               return {temp:json.data[0].temp,
                       description: json.data[0].weather.description,
                       icon: json.data[0].weather.icon};
             } else if (weatherType == FORECAST ) {
-              return {hitemp:json.data[0].high_temp,
-                      lowtemp:json.data[0].low_temp,
-                      description: json.data[0].weather.description,
-                      icon: json.data[0].weather.icon};
+              return {hitemp:json.data[daysAway].high_temp,
+                      lowtemp:json.data[daysAway].low_temp,
+                      description: json.data[daysAway].weather.description,
+                      icon: json.data[daysAway].weather.icon};
             } else if (weatherType == CLIMATE){
               return{avgtemp:json.data[0].temp,
                      maxtemp:json.data[0].max_temp,
