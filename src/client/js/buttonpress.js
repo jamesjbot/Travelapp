@@ -9,12 +9,12 @@ function addUserInputCard() {
 }
 
 function replaceWithInfoCard() {
-  if (userInputIsValid()) {
-    createNewTravelInfoCard();
-    deleteLastUserInputCard();
-  } else {
+  if (!userInputIsValid()) {
     console.log('User Input is Invalid!');
+    return;
   }
+  createNewTravelInfoCard();
+  deleteLastUserInputCard();
 }
 
 function userInputIsValid() {
