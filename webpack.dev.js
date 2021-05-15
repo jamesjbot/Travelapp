@@ -5,6 +5,12 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 
 module.exports = {
+    resolve: {
+        fallback: {
+            "zlib": false,
+            "path": require.resolve("path-browserify")
+        }
+    },
     entry: ['./src/client/index.js'],
     mode: 'development',
     devtool: 'source-map',
