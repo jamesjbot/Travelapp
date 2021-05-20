@@ -1,3 +1,4 @@
+const Dotenv = require('dotenv-webpack');
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebPackPlugin = require("html-webpack-plugin");
@@ -7,8 +8,16 @@ const WorkboxPlugin = require('workbox-webpack-plugin');
 module.exports = {
     resolve: {
         fallback: {
-            "zlib": false,
-            "path": require.resolve("path-browserify")
+            fs : false,
+            net: false,
+            "crypto" : false,
+            "http" : false,
+            "stream" : false,
+            "zlib" : false,
+            "path" : require.resolve("path-browserify")
+        },
+        alias: {
+            process: "process/browser"
         }
     },
     entry: ['./src/client/index.js'],
@@ -45,6 +54,12 @@ module.exports = {
         ]
     },
     plugins: [
+        new Dotenv({
+            path: path.resolve(__dirname, './.env'),
+        }),
+        new webpack.ProvidePlugin({
+            process: 'process/browser',
+        }),
         new HtmlWebPackPlugin({
             template: "./src/client/views/index.html",
             filename: "./index.html",
