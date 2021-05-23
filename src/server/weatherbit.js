@@ -23,9 +23,12 @@ function retrieveWeatherDataFromWeatherBit(lat,
   return fetch(constructWeatherbitURL(lat, lon, weatherType, month_day, key))
           .then( response => response.json() )
           .then(json => {
-            // TODO Find the correct weatehr
+            // TODO Find the correct weather
             console.log('We need to pick the correct forecast weather');
             console.log('weather',json);
+            // There are only 0-15 forecast dates in the array
+            // At 6pm ish everyday the 0th day incremented to the next day.
+            // TODO this needs a date check
             if (weatherType == CURRENT){
               return {temp:json.data[0].temp,
                       description: json.data[0].weather.description,
@@ -36,9 +39,9 @@ function retrieveWeatherDataFromWeatherBit(lat,
                       description: json.data[daysAway].weather.description,
                       icon: json.data[daysAway].weather.icon};
             } else if (weatherType == CLIMATE){
-              return{avgtemp:json.data[0].temp,
-                     maxtemp:json.data[0].max_temp,
-                     mintemp:json.data[0].min_temp};
+              return{avgtemp: 'Not available',
+                     maxtemp: 'Not available',
+                     mintemp: 'Not available'};
             }
               throw new Error(`Unrecogized weathertype ${weatherType}`);
           });
