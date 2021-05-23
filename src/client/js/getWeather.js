@@ -19,4 +19,4 @@ function getWeatherPromise(lat_long_JSON, weather_Type, daysAway, date) {
     });
 }
 
-export default getWeatherPromise ;
+export { getWeatherPromise };
