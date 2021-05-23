@@ -29,9 +29,9 @@ const app = express();
 
 /* Middleware*/
 //Here we are configuring express to use body-parser as middle-ware.
-const bodyParser = require('body-parser');
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+//const bodyParser = require('body-parser');
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
 // Cors for cross origin allowance
 const cors = require('cors');
@@ -117,6 +117,7 @@ app.post('/weather', function (req, res) {
     })
     .catch( function(error) {
       console.log('Error calling weather',error);
+      // TODO Change temp to correct description and change description to correct description
       res.send({high:99, low:66, description: 'Error Calling Weatherbit'});
     });
 });
