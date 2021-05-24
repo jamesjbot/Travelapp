@@ -50,9 +50,9 @@ const server = app.listen(port,() => {
 
 app.post('/postUserData', function(req, res){
     console.log('server.js /postUserData');
-    console.log('server.js request received', req.body);
+    //console.log('server.js request received', req.body);
     userData = req.body;
-    console.log('Received', userData);
+    console.log('/postUserData Received', userData);
     res.status(200);
     res.send();
 });
@@ -101,14 +101,13 @@ app.post('/pixabay', function (req, res) {
 app.post('/weather', function (req, res) {
     console.log('server.js /weather request');
     console.log('weathertype',req.body.weatherType);
-    console.log('server.js request received', req.body.data);
-
-    console.log('req.body',req.body);
+    console.log('server.js /weather request received', req.body);
     let key = process.env.WEATHERBIT_API_KEY;
     weatherbit.retrieveWeatherDataFromWeatherBit(req.body.latLong.lat,
                                                  req.body.latLong.long,
                                                  req.body.weatherType,
                                                  req.body.daysAway,
+                                                 req.body.travelDate,
                                                  req.body.month_day,
                                                  key)
     .then( data => {

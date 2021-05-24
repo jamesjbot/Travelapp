@@ -1,11 +1,12 @@
 
 /*jshint esversion:8*/
 
-function getWeatherPromise(lat_long_JSON, weather_Type, daysAway, date) {
-    const jsonText = {latLong: lat_long_JSON,
+function getWeatherPromise(lat_long_JSON, weather_Type, daysAway, travelDate, month_day) {
+  const jsonText = {latLong: lat_long_JSON,
                       weatherType: weather_Type,
                       daysAway: daysAway,
-                      month_day: date};
+                      travelDate: travelDate,
+                      month_day: month_day};
     return fetch('http://localhost:9000/weather', {
       method: 'POST',
       credentials: 'same-origin',

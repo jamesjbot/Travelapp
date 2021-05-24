@@ -4,6 +4,7 @@ import { isDateSupported } from './userinputcardlogic';
 import { dateFromGenericInputString } from './buttonpress';
 import { dateDifference, getFutureDateFrom } from './datelogic';
 import { getWeatherPromise } from './getWeather';
+
 // TODO Remove 
 //import { json } from 'body-parser';
 //import { setMaxListeners } from '../../server/server';
@@ -42,7 +43,7 @@ async function getTripDataFromServerThen(updatingUIFunction) {
 async function createNewTravelInfoCard() {
   // TODO the server calls are happenening before we finish queryAll
   generateTravelInfoCardTemplate();
-  let dateStats = convertUserInputDateToJSONDateStats();
+  let dateStats = createJSONDateStatsFromUserInputDate(getTodaysDate(), getUserInputDate(), isDateSupported());
   try {
     let rawTripData = await queryAll3APIBuildJSONOfUserData(getUserPlacename(), dateStats);
     await sendTripDataToServer(rawTripData);
@@ -58,7 +59,7 @@ async function createNewTravelInfoCard() {
 async function generateTravelInfoCardTemplate() {
   console.log('gen TravelInfo Template called');
   // Save values locally
-  let dateJSON = convertUserInputDateToJSONDateStats();
+  let dateJSON = createJSONDateStatsFromUserInputDate( getTodaysDate(), getUserInputDate(),isDateSupported());
 
   // Create travelCard container
   let travelCard = document.createElement('div');
@@ -108,7 +109,7 @@ function createInformationStack() {
   // temperature_div
   // weather_description_div
 
-  let dateStats = convertUserInputDateToJSONDateStats();
+  let dateStats = createJSONDateStatsFromUserInputDate( getTodaysDate(), getUserInputDate(), isDateSupported());
 
   let stack = document.createElement('div');
   stack.classList.add("information_stack");
@@ -198,19 +199,24 @@ async function queryAll3APIBuildJSONOfUserData(from_placename, dateStats) {
     // TODO REMOVE
     console.log(`the weathertype is ${dateStats.typeOfWeathercast}`);
   
+    // TODO THIS WHOLE SECTION IS POPULATING DATA TO SEND TO THE SERVER
     if (dateStats.typeOfWeathercast == CLIMATE) {
     
       // TODO REMOVE
+      // TODO is this section redundant, decide on replacing data here or replacing it in updateUI
       console.log('Climate section');
-      //USEROUTPUTDATA.forecastlabel_div = ;
-      USEROUTPUTDATA.temperature_label = 'No temperature available';
-      USEROUTPUTDATA.description = 'Travel date is too far to forecast weather';
+      USEROUTPUTDATA.forecastlabel_div = '-->This is the wrong forecast data';
+      USEROUTPUTDATA.temperature_label = '-->No temperature available';
+      USEROUTPUTDATA.description = '-->Travel date is too far to forecast weather';
       console.log('Exited Climate section');
     
     } else {
     
-      temp = await getWeatherPromise(json_Location, dateStats.typeOfWeathercast, 
-                                     dateStats.daysAway ,dateStats.month_day);
+      temp = await getWeatherPromise(json_Location, 
+                                     dateStats.typeOfWeathercast, 
+                                     dateStats.daysAway , 
+                                     dateStats.departDate,
+                                     dateStats.month_day);
       let weatherData = await temp;
       console.log(`weather data from server ${await weatherData}`, weatherData);
       USEROUTPUTDATA.weatherDescription = await weatherData.description;
@@ -303,7 +309,8 @@ function createErrorUserData() {
   return USEROUTPUTDATA;
 }
 
-
+// TODO REMOVE DEADCODE
+// THIS FUNCTION IS NEVER USED ANYMORE 
 async function fillinWeatherAsynchronously(weather_Type,
   from_placename,
   uiupdate_temperature,
@@ -411,24 +418,30 @@ function updateUIElementsBasedOn(typeOfWeathercast,
 
 
 // Processes the date so that we know which type of forecast to display
-function convertUserInputDateToJSONDateStats() {
+function createJSONDateStatsFromUserInputDate(todaysDate, inputTravelDate, isDateSupported) {
   // Process date entry logic.
+  console.log(`-> Received todaysDate: ${todaysDate} TravelDate: ${inputTravelDate.value}`);
+  //let todaysDate = new Date(Date.now());
+  //let sixteenDaysFromToday = getFutureDateFrom(new Date(Date.now()), 16);
+  let seventeenDaysFromToday = getFutureDateFrom(todaysDate, 17);
 
-  let todaysDate = new Date(Date.now());
-  let sixteenDaysFromToday = getFutureDateFrom(new Date(Date.now()), 16);
   // Reset date to midnight of the day.
-  sixteenDaysFromToday.setHours(0);
-  sixteenDaysFromToday.setMinutes(0);
-  sixteenDaysFromToday.setSeconds(0);
+  seventeenDaysFromToday.setHours(0);
+  seventeenDaysFromToday.setMinutes(0);
+  seventeenDaysFromToday.setSeconds(0);
+  seventeenDaysFromToday.setMilliseconds(0);
+  console.log(`--> 16days from today: ${seventeenDaysFromToday}`);
+  //let inputDate = document.getElementById('travelDay');
 
-  let inputDate = document.getElementById('travelDay');
-
-  let travelDate;
   // TODO Change the name of this function to isDateInputTypeSupportedInTheBrowser()
-  if (isDateSupported()) {
-    travelDate = new Date((inputDate.value).replace(/-/g, '\/'));
+  let travelDate;
+
+  if (isDateSupported) {
+    // Create date in format YYYY/MM/DD
+    travelDate = new Date((inputTravelDate.value).replace(/-/g, '\/'));
+    console.log(`--> travelDate now looks like ${travelDate}`);
   } else {
-    travelDate = dateFromGenericInputString(inputDate.value);
+    travelDate = dateFromGenericInputString(inputTravelDate.value);
   }
 
   let dateDiff = dateDifference(todaysDate, travelDate);
@@ -447,7 +460,7 @@ function convertUserInputDateToJSONDateStats() {
     // If today retrieve current weatherURL
     typeOfWeathercast = CURRENT;
 
-  } else if (travelDate < sixteenDaysFromToday) {
+  } else if (travelDate < seventeenDaysFromToday) {
     // If tomorrow till 16 days later use forecast
     console.log(`------>Why is this date being called 
     forecast when travelDate: ${travelDate} is clearly 
@@ -524,6 +537,14 @@ function getLatLongLocationPromise(input) {
 *
 */
 
+function getTodaysDate() {
+  let todaysDate = new Date(Date.now())
+  return  todaysDate;
+}
+
+function getUserInputDate() {
+  return document.getElementById('travelDay');
+}
 
 function getUserPlacename() {
   return document.getElementById('placename').value;
@@ -535,4 +556,7 @@ function incrementSuffix() {
   suffix += 1;
 }
 
-export { createNewTravelInfoCard };
+export { createNewTravelInfoCard,
+// TODO REMOVE PRIVATE METHODS
+createJSONDateStatsFromUserInputDate  
+   };
