@@ -200,14 +200,12 @@ async function queryAll3APIBuildJSONOfUserData(from_placename, dateStats) {
     console.log(`the weathertype is ${dateStats.typeOfWeathercast}`);
   
     // TODO THIS WHOLE SECTION IS POPULATING DATA TO SEND TO THE SERVER
-    if (dateStats.typeOfWeathercast == CLIMATE) {
-    
-      // TODO REMOVE
-      // TODO is this section redundant, decide on replacing data here or replacing it in updateUI
+    if (dateStats.typeOfWeathercast == CLIMATE) { // If it's a climate prediction never call weather data
+      // TODO Server is somehow filling this in when it shouldn't
+      // updateUI is also doing this?
       console.log('Climate section');
-      USEROUTPUTDATA.forecastlabel_div = '-->This is the wrong forecast data';
-      USEROUTPUTDATA.temperature_label = '-->No temperature available';
-      USEROUTPUTDATA.description = '-->Travel date is too far to forecast weather';
+      USEROUTPUTDATA.temperature_label = 'No temperature available';
+      USEROUTPUTDATA.weatherDescription = 'Travel date is too far to forecast weather';
       console.log('Exited Climate section');
     
     } else {
@@ -219,12 +217,16 @@ async function queryAll3APIBuildJSONOfUserData(from_placename, dateStats) {
                                      dateStats.month_day);
       let weatherData = await temp;
       console.log(`weather data from server ${await weatherData}`, weatherData);
+      
+      // TODO Which of these weather descriptions is being used
       USEROUTPUTDATA.weatherDescription = await weatherData.description;
+      
       if (weatherData.hasOwnProperty('hitemp')) {
         USEROUTPUTDATA.temperature_label = `High: ${weatherData.hitemp} Low: ${weatherData.lowtemp}`;
       } else {
         USEROUTPUTDATA.temperature_label = `Temp: ${weatherData.temp}`;
       }
+
       USEROUTPUTDATA.description = weatherData.description;
       console.log('exiting querry 3 maybe?');
     
@@ -349,24 +351,24 @@ function updateUI(serverData) {
   //document.getElementById('departing' + suffix.toString()).innerHTML = `Departing: ${serverData.departDate}`;
   document.getElementById('daysaway' + suffix.toString()).innerHTML = `${serverData.placename} is ${serverData.daysAway} ${serverData.daysLabel} away`;
   document.getElementById('forecastlabel' + suffix.toString()).innerHTML = weatherForecastLabel(serverData.typeOfWeathercast);
-  if (serverData.typeOfWeathercast == CURRENT || serverData.typeOfWeathercast == FORECAST) {
+  document.getElementById('temperatures' + suffix.toString()).innerHTML = serverData.temperature_label;
+  document.getElementById('weatherdescription' + suffix.toString()).innerHTML = `${serverData.weatherDescription}`;
+
+  // TODO REMOVE this and put this into forecast label
+  //if (serverData.typeOfWeathercast == CURRENT || serverData.typeOfWeathercast == FORECAST) {
   
-    document.getElementById('temperatures' + suffix.toString()).innerHTML = serverData.temperature_label;
-    document.getElementById('weatherdescription' + suffix.toString()).innerHTML = `${serverData.weatherDescription}`;
   
-  } else { // CLIMATE
+  //} else { // CLIMATE
     // TODO REMOVE
-    console.log('updating climate portion in updateui');
+    //console.log('updating climate portion in updateui');
     //USEROUTPUTDATA.forecastlabel_div = 'No forecast for greater than 14 days away';
     //SEROUTPUTDATA.temperature_div = 'No temperature available';
     //USEROUTPUTDATA.weather_description_div = 'Travel date is too far to forecast weather';
     // TODO I can move this next line to the server
     // The server doesn't currently return any string i used the other serverData.typeOfWeatherCast and manipualted it
-    document.getElementById('forecastlabel' + suffix.toString()).innerHTML = 
-    'No forecast for greater than 14 days away';
-    document.getElementById('temperatures' + suffix.toString()).innerHTML = serverData.temperature_label;
-    document.getElementById('weatherdescription' + suffix.toString()).innerHTML = serverData.description;
-  }
+
+    //document.getElementById('weatherdescription' + suffix.toString()).innerHTML = serverData.description;
+  //}
 
   // TODO SAFE to remove
   //document.getElementById('temperatures0').innerHTML = 'masterOverride';
@@ -395,26 +397,26 @@ function updateUI(serverData) {
 }
 
 
-function updateUIElementsBasedOn(typeOfWeathercast,
-  data,
-  uiupdate_temperature,
-  uiupdate_weather_description) {
+// function updateUIElementsBasedOn(typeOfWeathercast,
+//   data,
+//   uiupdate_temperature,
+//   uiupdate_weather_description) {
 
-  if (typeOfWeathercast == CURRENT) {
+//   if (typeOfWeathercast == CURRENT) {
 
-    uiupdate_temperature.innerHTML = `Temperature: ${data.temp}`;
-    uiupdate_weather_description.innerHTML = data.description;
+//     uiupdate_temperature.innerHTML = `Temperature: ${data.temp}`;
+//     uiupdate_weather_description.innerHTML = data.description;
 
-  } else if (typeOfWeathercast == FORECAST) {
+//   } else if (typeOfWeathercast == FORECAST) {
 
-    uiupdate_temperature.innerHTML = `High: ${data.hitemp} Low: ${data.lowtemp}`;
-    uiupdate_weather_description.innerHTML = data.description;
+//     uiupdate_temperature.innerHTML = `High: ${data.hitemp} Low: ${data.lowtemp}`;
+//     uiupdate_weather_description.innerHTML = data.description;
 
-  } else if (typeOfWeathercast == CLIMATE) {
-    uiupdate_weather_description =
-    'No forecast for greater than 14 days away'
-  }
-}
+//   } else if (typeOfWeathercast == CLIMATE) {
+//     uiupdate_weather_description =
+//     'No forecast for greater than 14 days away'
+//   }
+// }
 
 
 // Processes the date so that we know which type of forecast to display
@@ -423,14 +425,14 @@ function createJSONDateStatsFromUserInputDate(todaysDate, inputTravelDate, isDat
   console.log(`-> Received todaysDate: ${todaysDate} TravelDate: ${inputTravelDate.value}`);
   //let todaysDate = new Date(Date.now());
   //let sixteenDaysFromToday = getFutureDateFrom(new Date(Date.now()), 16);
-  let seventeenDaysFromToday = getFutureDateFrom(todaysDate, 17);
+  let sixteenDaysFromToday = getFutureDateFrom(todaysDate, 16);
 
   // Reset date to midnight of the day.
-  seventeenDaysFromToday.setHours(0);
-  seventeenDaysFromToday.setMinutes(0);
-  seventeenDaysFromToday.setSeconds(0);
-  seventeenDaysFromToday.setMilliseconds(0);
-  console.log(`--> 16days from today: ${seventeenDaysFromToday}`);
+  sixteenDaysFromToday.setHours(0);
+  sixteenDaysFromToday.setMinutes(0);
+  sixteenDaysFromToday.setSeconds(0);
+  sixteenDaysFromToday.setMilliseconds(0);
+  console.log(`--> 16days from today: ${sixteenDaysFromToday}`);
   //let inputDate = document.getElementById('travelDay');
 
   // TODO Change the name of this function to isDateInputTypeSupportedInTheBrowser()
@@ -452,19 +454,20 @@ function createJSONDateStatsFromUserInputDate(todaysDate, inputTravelDate, isDat
   // TODO Break this down into a function
 
   console.log('--->Our traveldate:',travelDate);
-  console.log("--->Sixteen days from today",sixteenDaysFromToday);
+  console.log("--->sixteen days from today",sixteenDaysFromToday);
   
   if (travelDate.getFullYear() == todaysDate.getFullYear() &&
     travelDate.getMonth() == todaysDate.getMonth() &&
     travelDate.getDate() == todaysDate.getDate()) {
     // If today retrieve current weatherURL
+    console.log('Current is the type of weather');
     typeOfWeathercast = CURRENT;
 
-  } else if (travelDate < seventeenDaysFromToday) {
+  } else if (travelDate < sixteenDaysFromToday) {
     // If tomorrow till 16 days later use forecast
     console.log(`------>Why is this date being called 
     forecast when travelDate: ${travelDate} is clearly 
-    equal to sixteenDaysFromToday ${sixteenDaysFromToday}`);
+    equal to sixteenDaysFromToday ${sixteenDaysFromToday} \nForecast is the type of Weather`);
     typeOfWeathercast = FORECAST;
   } else {
     console.log('---> We have a CLIMATE');
@@ -493,7 +496,7 @@ function weatherForecastLabel(typeOfWeathercast) {
   } else if (typeOfWeathercast == FORECAST) {
     return 'The forecast for then is:';
   } else if (typeOfWeathercast == CLIMATE) {
-    return '';
+    return 'No forecast for greater than 15 days away';
   } else {
     throw new Error("Type of Weather forecast type is unrecogized");
   }
@@ -542,9 +545,11 @@ function getTodaysDate() {
   return  todaysDate;
 }
 
+
 function getUserInputDate() {
   return document.getElementById('travelDay');
 }
+
 
 function getUserPlacename() {
   return document.getElementById('placename').value;
@@ -556,7 +561,6 @@ function incrementSuffix() {
   suffix += 1;
 }
 
-export { createNewTravelInfoCard,
-// TODO REMOVE PRIVATE METHODS
-createJSONDateStatsFromUserInputDate  
+export {createNewTravelInfoCard,
+        createJSONDateStatsFromUserInputDate  // exposed for testing
    };
