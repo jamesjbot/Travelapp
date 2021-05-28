@@ -35,11 +35,6 @@ module.exports = {
       ],
     },
     plugins: [
-        replace({
-            preventAssignment: true,
-            'process.browser': true,
-            'process.env.NODE_ENV': JSON.stringify(mode)
-        }),
 	    new MiniCssExtractPlugin(),
         new HtmlWebPackPlugin({
             template: "./src/client/views/index.html",
