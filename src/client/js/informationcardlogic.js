@@ -41,26 +41,26 @@ async function getTripDataFromServerThen(updatingUIFunction) {
 async function createNewTravelInfoCard() {
 
   generateTravelInfoCardTemplate();
-  
+
   // Fill in actual information
   let placename = getUserPlacename();
   let dateStats = createJSONDateStatsFromUserInputDate(getTodaysDate(), getUserInputDate(), isDateSupported());
-  
+
   try {
     let rawTripData = await queryAll3APIBuildJSONOfUserData(placename, dateStats);
-    
+
     // Pass User Data to server 
     await sendTripDataToServer(createUserDataForDisplay(rawTripData));
 
     // Get User Data from server
     await getTripDataFromServerThen(updateUI);
-    
+
     await incrementTargetCardSuffix();
-  
+
   } catch (error) {
-    
+
     console.log(`Error creating new travel information card: ${error}`);
-    
+
     updateUI(createErrorUserData(placename));
 
     await incrementTargetCardSuffix();
@@ -71,9 +71,9 @@ async function createNewTravelInfoCard() {
 
 
 async function generateTravelInfoCardTemplate() {
-  
+
   // Save weather based decision values locally
-  let dateJSON = createJSONDateStatsFromUserInputDate( getTodaysDate(), getUserInputDate(),isDateSupported());
+  let dateJSON = createJSONDateStatsFromUserInputDate(getTodaysDate(), getUserInputDate(), isDateSupported());
 
   // Create travelCard html container
   let travelCard = document.createElement('div');
@@ -143,7 +143,7 @@ function createInformationStackFrom(dateStats) {
 
   // forecastlabel_div
   let forecastlabel_div = document.createElement('div');
-  forecastlabel_div.id = 'forecastlabel' + suffix.toString() 
+  forecastlabel_div.id = 'forecastlabel' + suffix.toString()
   forecastlabel_div.innerHTML = `Getting Forecast`;
 
   // temperature_div
@@ -177,7 +177,7 @@ function convertUserInputDateToJavascriptDate() {
 
 
 async function queryAll3APIBuildJSONOfUserData(from_placename, dateStats) {
-  
+
   try {
     let USEROUTPUTDATA = {};
     USEROUTPUTDATA.departDate = dateStats.departDate;
@@ -185,39 +185,38 @@ async function queryAll3APIBuildJSONOfUserData(from_placename, dateStats) {
     USEROUTPUTDATA.daysLabel = dateStats.daysLabel;
     USEROUTPUTDATA.typeOfWeathercast = dateStats.typeOfWeathercast;
 
+    // Get location
     let serializedJSON = await getLatLongLocationPromise(from_placename);
     let temp = await serializedJSON.json();
     let json_Location = await temp;
-        
+
     if (json_Location.exists == false || json_Location.exists == null) throw 'Unknown Location';
 
     USEROUTPUTDATA.placename = await `${json_Location.toponym}, ${json_Location.admincode}`;
-  
-    // TODO THIS WHOLE SECTION IS POPULATING DATA TO SEND TO THE SERVER
+
+    // Get weather data
     if (dateStats.typeOfWeathercast == CLIMATE) { // If it's a climate prediction never call weather data
 
       USEROUTPUTDATA.temperature_label = 'No temperature available';
       USEROUTPUTDATA.weatherDescription = 'Travel date is too far to forecast weather';
-    
+
     } else {
-    
-      temp = await getWeatherPromise(json_Location, 
-                                     dateStats.typeOfWeathercast, 
-                                     dateStats.daysAway , 
-                                     dateStats.departDate,
-                                     dateStats.month_day);
+
+      temp = await getWeatherPromise(json_Location,
+        dateStats.typeOfWeathercast,
+        dateStats.daysAway,
+        dateStats.departDate,
+        dateStats.month_day);
       let weatherData = await temp;
-      
+
       USEROUTPUTDATA.weatherDescription = await weatherData.description;
-      
-      if (weatherData.hasOwnProperty('hitemp')) {
-        USEROUTPUTDATA.temperature_label = `High: ${weatherData.hitemp} Low: ${weatherData.lowtemp}`;
-      } else {
-        USEROUTPUTDATA.temperature_label = `Temp: ${weatherData.temp}`;
-      }
-          
+
+      USEROUTPUTDATA.temperature_label = (weatherData.hasOwnProperty('hitemp')) 
+                                              ? `High: ${weatherData.hitemp} Low: ${weatherData.lowtemp}` 
+                                              : `Temp: ${weatherData.temp}`;
     }
 
+    // Get image 
     temp = await fetchPixabayImageURLFromServer(from_placename);
     let imageURL = await temp;
 
@@ -227,15 +226,16 @@ async function queryAll3APIBuildJSONOfUserData(from_placename, dateStats) {
     } else {
       USEROUTPUTDATA.caption = 'No Image Available';
     }
+
     return USEROUTPUTDATA;
 
   } catch (error) {
-    
+
     console.log('Sorry error with getting location or weather', error);
 
     throw error;
 
-    }
+  }
 }
 
 
@@ -264,13 +264,13 @@ function createUserDataForDisplay(serverData) {
   USEROUTPUTDATA.caption = `${serverData.placename}`;
 
   USEROUTPUTDATA.mytrip_div = `My Trip to: ${serverData.placename}`;
-  
+
   USEROUTPUTDATA.daysaway_div = `${serverData.placename} is ${serverData.daysAway} ${serverData.daysLabel} away`
-  
+
   USEROUTPUTDATA.forecastlabel_div = weatherForecastLabel(serverData.typeOfWeathercast);
   USEROUTPUTDATA.temperature_div = serverData.temperature_label;
   USEROUTPUTDATA.weather_description_div = serverData.weatherDescription;
-  
+
   return USEROUTPUTDATA;
 }
 
@@ -278,7 +278,7 @@ function createUserDataForDisplay(serverData) {
 function updateUI(serverData) {
 
   if (serverData.hasOwnProperty('imageURL')) document.getElementById('imgsrc' + suffix.toString()).src = serverData.imageURL;
-  
+
   document.getElementById('figcaption' + suffix.toString()).innerHTML = serverData.caption;
 
   document.getElementById('mytrip' + suffix.toString()).innerHTML = serverData.mytrip_div;
@@ -297,46 +297,11 @@ function updateUI(serverData) {
 function createJSONDateStatsFromUserInputDate(todaysDate, inputTravelDate, isDateSupported) {
   // Process date entry logic.
 
-  let sixteenDaysFromToday = getFutureDateFrom(todaysDate, 16);
-
-  // Reset date to midnight of the day.
-  sixteenDaysFromToday.setHours(0);
-  sixteenDaysFromToday.setMinutes(0);
-  sixteenDaysFromToday.setSeconds(0);
-  sixteenDaysFromToday.setMilliseconds(0);
-
-  let travelDate;
-
-  // TODO Break this into a function?
-  if (isDateSupported) {
-    // Create date in format YYYY/MM/DD
-    travelDate = new Date((inputTravelDate.value).replace(/-/g, '\/'));
-  } else {
-    travelDate = dateFromGenericInputString(inputTravelDate.value);
-  }
+  let travelDate = processUserInputDate(isDateSupported,inputTravelDate);
 
   let dateDiff = dateDifference(todaysDate, travelDate);
 
-  // Default value for type of weathercase
-  let typeOfWeathercast = CURRENT;
-
-  // TODO Break this down into a function
-  if (travelDate.getFullYear() == todaysDate.getFullYear() &&
-    travelDate.getMonth() == todaysDate.getMonth() &&
-    travelDate.getDate() == todaysDate.getDate()) {
-    // If today retrieve current weatherURL
-    typeOfWeathercast = CURRENT;
-
-  } else if (travelDate < sixteenDaysFromToday) {
-    
-    // If tomorrow till 16 days later use forecast
-    typeOfWeathercast = FORECAST;
-  
-  } else {
-
-    // We can't forcast that far
-    typeOfWeathercast = CLIMATE;
-  }
+  let typeOfWeathercast = selectForecastType(travelDate, todaysDate);
 
   let daysLabel = (dateDiff == 1) ? 'day' : 'days';
 
@@ -344,9 +309,9 @@ function createJSONDateStatsFromUserInputDate(todaysDate, inputTravelDate, isDat
 
   return {
     departDate: travelDate,
-    daysAway: dateDiff, 
+    daysAway: dateDiff,
     typeOfWeathercast: typeOfWeathercast,
-    daysLabel: daysLabel, 
+    daysLabel: daysLabel,
     month_day: month_day
   };
 }
@@ -403,10 +368,48 @@ function getLatLongLocationPromise(input) {
 *
 */
 
+function selectForecastType(travelDate, todaysDate) {
+
+  let sixteenDaysFromToday = getFutureDateFrom(todaysDate, 16);
+
+  // Reset date to midnight of the day.
+  sixteenDaysFromToday.setHours(0);
+  sixteenDaysFromToday.setMinutes(0);
+  sixteenDaysFromToday.setSeconds(0);
+  sixteenDaysFromToday.setMilliseconds(0);
+
+  if (travelDate.getFullYear() == todaysDate.getFullYear() &&
+    travelDate.getMonth() == todaysDate.getMonth() &&
+    travelDate.getDate() == todaysDate.getDate()) {
+    // If today retrieve current weatherURL
+    return CURRENT;
+
+  } else if (travelDate < sixteenDaysFromToday) {
+
+    // If tomorrow till 16 days later use forecast
+    return FORECAST;
+
+  } else {
+
+    // We can't forcast that far
+    return CLIMATE;
+  }
+}
+
+
+function processUserInputDate(isDateSupported, inputTravelDate) {
+  if (isDateSupported) {
+    // Create date in format YYYY/MM/DD
+    return new Date((inputTravelDate.value).replace(/-/g, '\/'));
+  } else {
+    return dateFromGenericInputString(inputTravelDate.value);
+  }
+}
+
 
 function getTodaysDate() {
   let todaysDate = new Date(Date.now())
-  return  todaysDate;
+  return todaysDate;
 }
 
 
@@ -425,6 +428,7 @@ function incrementTargetCardSuffix() {
 }
 
 
-export {createNewTravelInfoCard,
-        createJSONDateStatsFromUserInputDate  // exposed for testing
-   };
+export {
+  createNewTravelInfoCard,
+  createJSONDateStatsFromUserInputDate  // exposed for testing
+};
