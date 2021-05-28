@@ -46,6 +46,7 @@ async function createNewTravelInfoCard() {
   // Fill in actual information
   let placename = getUserPlacename();
   let dateStats = createJSONDateStatsFromUserInputDate(getTodaysDate(), getUserInputDate(), isDateSupported());
+  
   try {
     let rawTripData = await queryAll3APIBuildJSONOfUserData(placename, dateStats);
     
@@ -55,8 +56,7 @@ async function createNewTravelInfoCard() {
     // Get User Data from server
     await getTripDataFromServerThen(updateUI);
     
-    // TODO would another name be better for this
-    await incrementSuffix();
+    await incrementTargetCardSuffix();
   
   } catch (error) {
     
@@ -64,7 +64,7 @@ async function createNewTravelInfoCard() {
     
     updateUI(createErrorUserData(placename));
 
-    await incrementSuffix();
+    await incrementTargetCardSuffix();
 
   }
 
@@ -199,9 +199,6 @@ async function queryAll3APIBuildJSONOfUserData(from_placename, dateStats) {
     if (json_Location.exists == false || json_Location.exists == null) throw 'Unknown Location';
 
     USEROUTPUTDATA.placename = await `${json_Location.toponym}, ${json_Location.admincode}`;
-
-    // TODO REMOVE
-    //console.log(`the weathertype is ${dateStats.typeOfWeathercast}`);
   
     // TODO THIS WHOLE SECTION IS POPULATING DATA TO SEND TO THE SERVER
     if (dateStats.typeOfWeathercast == CLIMATE) { // If it's a climate prediction never call weather data
@@ -219,7 +216,6 @@ async function queryAll3APIBuildJSONOfUserData(from_placename, dateStats) {
       let weatherData = await temp;
       console.log(`weather data from server ${await weatherData}`, weatherData);
       
-      // TODO Which of these weather descriptions is being used
       USEROUTPUTDATA.weatherDescription = await weatherData.description;
       
       if (weatherData.hasOwnProperty('hitemp')) {
@@ -227,8 +223,6 @@ async function queryAll3APIBuildJSONOfUserData(from_placename, dateStats) {
       } else {
         USEROUTPUTDATA.temperature_label = `Temp: ${weatherData.temp}`;
       }
-      // TODO REMOVE The following deadcode
-      USEROUTPUTDATA.description = weatherData.description;
       
       console.log('exiting querry 3 maybe?');
     
@@ -249,60 +243,19 @@ async function queryAll3APIBuildJSONOfUserData(from_placename, dateStats) {
     
     console.log('Sorry error with getting location or weather', error);
 
-    throw new Error(error.message,createErrorUserData);
+    throw error;
 
     }
 }
 
 
-
-
-// TODO REMOVE DEADCODE
-// THIS FUNCTION IS NEVER USED ANYMORE 
-async function fillinWeatherAsynchronously(weather_Type,
-  from_placename,
-  uiupdate_temperature,
-  uiupdate_weather_description,
-  month_day,
-  output_placename_div) {
-
-}
-
-// TODO REMOVE DEADCODE
-// This corrects the name of the ocation based on what geonames returned
-function replacePlacenameInDiv(output_placename_div, json_Location) {
-  // JUST USE This
-  // `<div>${place_Name} is ${dateJSON.daysAway}
-  //                           ${dateJSON.daysLabel} away </div>`
-  let original = output_placename_div.innerHTML;
-  let indexOfIs = original.indexOf('is');
-  let indexOfcarat = original.indexOf('>');
-  let old = original.substring(indexOfcarat + 1, indexOfIs);
-  let replacement = `${json_Location.toponym}, ${json_Location.admincode} `;
-  let newString = original.replace(old, replacement);
-  output_placename_div.innerHTML = newString;
-}
-
-
 function createErrorUserData(from_placename) {
-  // TODO Remove
-  console.log('createErrorUserData called');
-  // save the data and put the update in the update step
-  /* Elements needded
-  * imageURL
-  * caption
-  * placename
-  * daysAway
-  * daysLabel
-  * typeOfWeathercast
-  * temperature_label
-  * weatherDescription
-  */
+
   let USEROUTPUTDATA = {};
   USEROUTPUTDATA.caption = 'No Image Available';
   USEROUTPUTDATA.mytrip_div = `You've entered a nonexistent place`;
   USEROUTPUTDATA.depart_div = 'Cannot depart to nonexistent place';
-  // TODO do you need this?
+
   USEROUTPUTDATA.forecastlabel_div = '';
   USEROUTPUTDATA.daysaway_div =
     `You've entered a nonexistent place: ` +
@@ -312,27 +265,15 @@ function createErrorUserData(from_placename) {
   return USEROUTPUTDATA;
 }
 
+
 function createUserDataForDisplay(serverData) {
-    // save the data and put the update in the update step
-  /* Elements needded
-  * imageURL
-  * caption
-  * placename
-  * daysAway
-  * daysLabel
-  * typeOfWeathercast
-  * temperature_label
-  * weatherDescription
-  */
+
   let USEROUTPUTDATA = {};
 
   USEROUTPUTDATA.imageURL = serverData.imageURL;
   USEROUTPUTDATA.caption = `${serverData.placename}`;
 
   USEROUTPUTDATA.mytrip_div = `My Trip to: ${serverData.placename}`;
-
-  // TODO The Page already has this no need to redo
-  ///USEROUTPUTDATA.depart_div = `Departing: ${serverData.departDate}`;
   
   USEROUTPUTDATA.daysaway_div = `${serverData.placename} is ${serverData.daysAway} ${serverData.daysLabel} away`
   
@@ -343,18 +284,9 @@ function createUserDataForDisplay(serverData) {
   return USEROUTPUTDATA;
 }
 
+
 function updateUI(serverData) {
-  /*
-  * Elements needded
-  * imageURL
-  * caption
-  * placename
-  * daysAway
-  * daysLabel
-  * typeOfWeathercast
-  * temperature_label
-  * weatherDescription
-  */
+
   console.log('You are trying to update the UI with', serverData);
 
   if (serverData.hasOwnProperty('imageURL')) document.getElementById('imgsrc' + suffix.toString()).src = serverData.imageURL;
@@ -371,7 +303,6 @@ function updateUI(serverData) {
   document.getElementById('weatherdescription' + suffix.toString()).innerHTML = serverData.weather_description_div;
 
 }
-
 
 
 // Processes the date so that we know which type of forecast to call for display
@@ -504,10 +435,11 @@ function getUserPlacename() {
 }
 
 
-function incrementSuffix() {
+function incrementTargetCardSuffix() {
   console.log('Increment Suffix called');
   suffix += 1;
 }
+
 
 export {createNewTravelInfoCard,
         createJSONDateStatsFromUserInputDate  // exposed for testing
