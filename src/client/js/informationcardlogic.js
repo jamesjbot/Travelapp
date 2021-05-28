@@ -32,7 +32,6 @@ async function getTripDataFromServerThen(updatingUIFunction) {
   await fetch('http://localhost:9000/getUserData')
     .then(serializedData => serializedData.json())
     .then(data => {
-      console.log('getTripDataFromServer returning readable data', data);
       updatingUIFunction(data);
       return data;
     })
@@ -72,7 +71,6 @@ async function createNewTravelInfoCard() {
 
 
 async function generateTravelInfoCardTemplate() {
-  console.log('gen TravelInfo Template called');
   
   // Save weather based decision values locally
   let dateJSON = createJSONDateStatsFromUserInputDate( getTodaysDate(), getUserInputDate(),isDateSupported());
@@ -97,7 +95,6 @@ async function generateTravelInfoCardTemplate() {
   // Insert travel card into DOM before the Add Travel Leg button
   let cardContainer = document.getElementById('listcontainer');
   cardContainer.insertBefore(travelCard, addLegButton);
-  console.log('finished add elements to dom');
 
 }
 
@@ -180,8 +177,6 @@ function convertUserInputDateToJavascriptDate() {
 
 
 async function queryAll3APIBuildJSONOfUserData(from_placename, dateStats) {
-
-  console.log(`Query all 3 received these dateStats:$`, dateStats);
   
   try {
     let USEROUTPUTDATA = {};
@@ -193,9 +188,7 @@ async function queryAll3APIBuildJSONOfUserData(from_placename, dateStats) {
     let serializedJSON = await getLatLongLocationPromise(from_placename);
     let temp = await serializedJSON.json();
     let json_Location = await temp;
-    
-    //console.log(`json_Location: ${await json_Location}`, json_Location);
-    
+        
     if (json_Location.exists == false || json_Location.exists == null) throw 'Unknown Location';
 
     USEROUTPUTDATA.placename = await `${json_Location.toponym}, ${json_Location.admincode}`;
@@ -214,7 +207,6 @@ async function queryAll3APIBuildJSONOfUserData(from_placename, dateStats) {
                                      dateStats.departDate,
                                      dateStats.month_day);
       let weatherData = await temp;
-      console.log(`weather data from server ${await weatherData}`, weatherData);
       
       USEROUTPUTDATA.weatherDescription = await weatherData.description;
       
@@ -223,14 +215,12 @@ async function queryAll3APIBuildJSONOfUserData(from_placename, dateStats) {
       } else {
         USEROUTPUTDATA.temperature_label = `Temp: ${weatherData.temp}`;
       }
-      
-      console.log('exiting querry 3 maybe?');
-    
+          
     }
 
     temp = await fetchPixabayImageURLFromServer(from_placename);
     let imageURL = await temp;
-    console.log(`imageURL: ${await imageURL}`, imageURL);
+
     if (imageURL != null) {
       USEROUTPUTDATA.imageURL = imageURL;
       USEROUTPUTDATA.caption = USEROUTPUTDATA.placename;
@@ -287,8 +277,6 @@ function createUserDataForDisplay(serverData) {
 
 function updateUI(serverData) {
 
-  console.log('You are trying to update the UI with', serverData);
-
   if (serverData.hasOwnProperty('imageURL')) document.getElementById('imgsrc' + suffix.toString()).src = serverData.imageURL;
   
   document.getElementById('figcaption' + suffix.toString()).innerHTML = serverData.caption;
@@ -308,7 +296,6 @@ function updateUI(serverData) {
 // Processes the date so that we know which type of forecast to call for display
 function createJSONDateStatsFromUserInputDate(todaysDate, inputTravelDate, isDateSupported) {
   // Process date entry logic.
-  console.log(`-> Received todaysDate: ${todaysDate} TravelDate: ${inputTravelDate.value}`);
 
   let sixteenDaysFromToday = getFutureDateFrom(todaysDate, 16);
 
@@ -338,17 +325,15 @@ function createJSONDateStatsFromUserInputDate(todaysDate, inputTravelDate, isDat
     travelDate.getMonth() == todaysDate.getMonth() &&
     travelDate.getDate() == todaysDate.getDate()) {
     // If today retrieve current weatherURL
-    console.log('Current is the type of weather');
     typeOfWeathercast = CURRENT;
 
   } else if (travelDate < sixteenDaysFromToday) {
+    
     // If tomorrow till 16 days later use forecast
-    console.log(`------>Why is this date being called 
-    forecast when travelDate: ${travelDate} is clearly 
-    equal to sixteenDaysFromToday ${sixteenDaysFromToday} \nForecast is the type of Weather`);
     typeOfWeathercast = FORECAST;
+  
   } else {
-    console.log('---> We have a CLIMATE');
+
     // We can't forcast that far
     typeOfWeathercast = CLIMATE;
   }
@@ -436,7 +421,6 @@ function getUserPlacename() {
 
 
 function incrementTargetCardSuffix() {
-  console.log('Increment Suffix called');
   suffix += 1;
 }
 

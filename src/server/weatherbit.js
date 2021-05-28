@@ -28,8 +28,6 @@ function retrieveWeatherDataFromWeatherBit(
     .then(response => response.json())
     .then(json => {
 
- 
-
       if (weatherType == CURRENT) {
       
         return {
