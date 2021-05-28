@@ -6,8 +6,6 @@ const pixabay = require('./pixabay');
 // Setup empty JS object to act as storage for user data
 let userData = {};
 
-//TODO setup get of collected Data
-//TODO setup three post of foreign Data or one post
 
 // Setup environment variables to hide apikeys
 const dotEnv = require('dotenv'); // Used to get apikey from the environment
@@ -28,8 +26,6 @@ const path = require('path');
 const app = express();
 
 /* Middleware*/
-//Here we are configuring express to use body-parser as middle-ware.
-//const bodyParser = require('body-parser');
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
@@ -46,7 +42,9 @@ const server = app.listen(port,() => {
   console.log(`running on port ${port}`);
 });
 
+
 // Routes
+
 
 app.post('/postUserData', function(req, res){
     console.log('server.js /postUserData');
@@ -64,6 +62,7 @@ app.get('/getUserData', function(req, res){
     res.send(userData);
 });
 
+
 // Get lat long from third party provider
 app.post('/location', function(req, res) {
     console.log('server.js /location request');
@@ -74,6 +73,7 @@ app.post('/location', function(req, res) {
       res.send(jsonLatLong);
     });
 });
+
 
 // Getting Pixabay Images without exposing our API_KEY
 app.post('/pixabay', function (req, res) {
@@ -97,6 +97,7 @@ app.post('/pixabay', function (req, res) {
       });
 });
 
+
 // Get weather from weatherbit
 app.post('/weather', function (req, res) {
     console.log('server.js /weather request');
@@ -116,8 +117,7 @@ app.post('/weather', function (req, res) {
     })
     .catch( function(error) {
       console.log('Error calling weather',error);
-      // TODO Change temp to correct description and change description to correct description
-      res.send({high:99, low:66, description: 'Error Calling Weatherbit'});
+      res.send({high:00, low:00, description: 'Error Calling Weatherbit'});
     });
 });
 
