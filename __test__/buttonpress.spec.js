@@ -3,6 +3,8 @@
 import { validateTodaysDateWith } from "../src/client/js/buttonpress";
 import 'regenerator-runtime/runtime';
 
+jest.clearAllMocks();
+
 describe("buttonpress datelogic tests", () => {
 
   // Given: A basic HTML DOM
