@@ -1,11 +1,12 @@
 
 /*jshint esversion:8*/
-//import { validateTodaysDateWith } from "../src/server/server";
 import 'regenerator-runtime/runtime';
 
 /**
  * @jest-environment jsdom
  */
+
+jest.clearAllMocks();
 
 
 const request = require('supertest');
