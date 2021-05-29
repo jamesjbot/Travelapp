@@ -117,7 +117,7 @@ app.post('/weather', function (req, res) {
     })
     .catch( function(error) {
       console.log('Error calling weather',error);
-      res.send({high:00, low:00, description: 'Error Calling Weatherbit'});
+      res.send({high:999, low:-999, description: 'Error Calling Weatherbit'});
     });
 });
 
